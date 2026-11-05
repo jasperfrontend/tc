@@ -60,6 +60,10 @@
     return t.replace(/\s+/g, ' ').trim();
   }
 
+  // Bump when og/session.html changes, so every preview image gets a new URL
+  // (Discord caches images by URL) and og/sessions.mjs re-renders them all.
+  var IMAGE_VERSION = 2;
+
   // FNV-1a, 32 bit: a short fingerprint so changed sessions get a new preview image URL
   function fingerprint(str) {
     var h = 0x811c9dc5;
@@ -106,7 +110,7 @@
       speakers: r.sp.slice(),
       speakerText: listNames(r.sp, 5),
       description: desc,
-      image: 'og/s/' + r.id + '-' + fingerprint(JSON.stringify([title, room, r.s, r.e, r.sp, r.p])) + '.jpg'
+      image: 'og/s/' + r.id + '-' + fingerprint(JSON.stringify([IMAGE_VERSION, title, room, r.s, r.e, r.sp, r.p])) + '.jpg'
     };
   }
 
