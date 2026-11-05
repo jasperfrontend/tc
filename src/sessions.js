@@ -1,4 +1,5 @@
-// Shared by the Worker (src/worker.js) and the Pages Function (functions/api/sessions.js).
+// Shared by the Worker (src/worker.js) and the Pages Functions
+// (functions/api/sessions.js, functions/s/[id].js).
 
 const UPSTREAM = 'https://api.twitchcon.com/sessions?eventName=san-diego-2026';
 const KV_KEY = 'sessions';
@@ -7,27 +8,39 @@ const MEMO_MS = 60 * 1000;                 // per-isolate memory cache, saves KV
 const RETRY_MS = 15 * 60 * 1000;           // min gap between on-request refresh attempts per isolate
 export const REFRESH_UNTIL = Date.UTC(2026, 10, 18); // stop polling TwitchCon a few days after the event
 
-let memo = null;        // { body, fetchedAt, at }
+let memo = null;        // { body, fetchedAt, at, byId? }
 let lastAttempt = 0;
 
+/** The stored copy ({ body, fetchedAt, at }), fetching it first if KV is still empty. Null if unavailable. */
+async function loadEntry(env) {
+  const now = Date.now();
+  if (memo && now - memo.at < MEMO_MS) return memo;
+
+  const { value, metadata } = await env.SCHEDULE.getWithMetadata(KV_KEY);
+  if (value) return (memo = { body: value, fetchedAt: metadata?.fetchedAt ?? 0, at: now });
+
+  // nothing stored yet (first deploy), so fetch it right now
+  lastAttempt = now;
+  const fresh = await refresh(env);
+  return fresh ? (memo = { body: fresh.body, fetchedAt: fresh.fetchedAt, at: now }) : null;
+}
+
+/** One trimmed session by id, or null. */
+export async function getSession(env, id) {
+  const entry = await loadEntry(env);
+  if (!entry) return null;
+  if (!entry.byId) {
+    entry.byId = new Map();
+    for (const s of JSON.parse(entry.body).sessions) entry.byId.set(s.id, s);
+  }
+  return entry.byId.get(id) ?? null;
+}
 
 export async function serveSessions(env, ctx) {
   const now = Date.now();
-  let entry = memo && now - memo.at < MEMO_MS ? memo : null;
-
+  const entry = await loadEntry(env);
   if (!entry) {
-    const { value, metadata } = await env.SCHEDULE.getWithMetadata(KV_KEY);
-    if (value) entry = memo = { body: value, fetchedAt: metadata?.fetchedAt ?? 0, at: now };
-  }
-
-  // nothing stored yet (first deploy), so fetch it right now
-  if (!entry) {
-    lastAttempt = now;
-    const fresh = await refresh(env);
-    if (!fresh) {
-      return json('{"error":"Could not reach the TwitchCon schedule. Try again in a minute."}', 502, 'no-store');
-    }
-    entry = memo = { body: fresh.body, fetchedAt: fresh.fetchedAt, at: now };
+    return json('{"error":"Could not reach the TwitchCon schedule. Try again in a minute."}', 502, 'no-store');
   }
 
   let body = entry.body;

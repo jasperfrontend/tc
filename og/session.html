@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Session preview source</title>
+<!-- Template for public/og/s/<id>-<hash>.jpg (1200x630). og/sessions.mjs calls fill() per session. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=block">
+<style>
+  :root {
+    --blue: #0014a5; --teal: #00c8af; --pink: #fa1ed2; --lime: #d4ff2a; --mint: #e6fbf3; --ink: #0b1340;
+    --zone: #6B3FD4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body { position: relative; background: var(--mint); font-family: 'Barlow Semi Condensed', sans-serif; color: var(--ink); }
+
+  .glow { position: absolute; border-radius: 50%; filter: blur(70px); }
+  .g1 { width: 560px; height: 560px; right: -200px; top: -280px; background: var(--lime); opacity: .7; }
+  .g2 { width: 480px; height: 480px; right: 40px; bottom: -340px; background: var(--teal); opacity: .5; }
+  .g3 { width: 380px; height: 380px; left: -220px; top: -190px; background: var(--pink); opacity: .2; }
+
+  .copy { position: absolute; left: 72px; top: 58px; width: 790px; }
+  .kicker { display: flex; align-items: center; gap: 12px; font: 700 21px/1 'Barlow Semi Condensed', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); }
+  .kicker i { width: 13px; height: 13px; border-radius: 3px; background: var(--pink); transform: rotate(45deg); }
+
+  .where { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; padding: 8px 16px 9px; border-radius: 999px;
+    background: rgba(255, 255, 255, .8); box-shadow: 0 0 0 2px color-mix(in srgb, var(--zone) 35%, transparent);
+    font: 600 23px/1 'Barlow Semi Condensed', sans-serif; color: var(--ink); max-width: 790px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .where i { flex: none; width: 13px; height: 13px; border-radius: 50%; background: var(--zone); }
+  .where b { font-weight: 700; color: var(--zone); }
+
+  h1 { margin-top: 22px; max-height: 248px; overflow: hidden; font: 800 72px/1.0 'Bricolage Grotesque', sans-serif; letter-spacing: -0.03em; color: var(--blue); overflow-wrap: anywhere; }
+
+  .when { display: flex; align-items: baseline; gap: 14px; margin-top: 22px; }
+  .when b { font: 800 50px/1 'Bricolage Grotesque', sans-serif; letter-spacing: -0.02em; color: var(--pink); }
+  .when span { font: 600 23px/1 'Barlow Semi Condensed', sans-serif; color: #4a5488; }
+  .who { margin-top: 12px; font: 500 26px/1.25 'Barlow Semi Condensed', sans-serif; color: #2a3470; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .who:empty { display: none; }
+
+  .bottom { position: absolute; left: 72px; bottom: 50px; display: flex; align-items: center; gap: 18px; }
+  .url { padding: 11px 20px 12px; border-radius: 999px; background: var(--blue); color: #fff; font: 700 26px/1 'Barlow Semi Condensed', sans-serif; }
+  .note { font: 600 19px/1.2 'Barlow Semi Condensed', sans-serif; color: #4a5488; }
+
+  /* mini timeline with this session highlighted */
+  .tl { position: absolute; left: 930px; top: 96px; width: 300px; height: 620px; border-radius: 24px; background: rgba(255, 255, 255, .82);
+    box-shadow: 0 30px 60px -20px rgba(0, 20, 165, .35), 0 0 0 2px rgba(0, 20, 165, .08); transform: rotate(5deg); transform-origin: 0 0; overflow: hidden; }
+  .tl .hr { position: absolute; left: 0; right: 0; height: 2px; background: #eef1f8; }
+  .ev { position: absolute; border-radius: 10px; padding: 11px 12px; background: color-mix(in srgb, var(--c) 16%, #fff); border-left: 6px solid var(--c); }
+  .ev::before, .ev::after { content: ''; display: block; height: 10px; border-radius: 5px; background: var(--c); opacity: .85; }
+  .ev::before { width: 80%; }
+  .ev::after { width: 50%; margin-top: 8px; opacity: .4; }
+  .ev.me { --c: var(--zone); background: color-mix(in srgb, var(--zone) 24%, #fff); box-shadow: 0 0 0 4px var(--pink), 0 14px 30px -10px rgba(0, 20, 165, .45); }
+  .star { position: absolute; right: 10px; bottom: 9px; width: 24px; height: 24px; fill: var(--pink); }
+</style>
+</head>
+<body>
+  <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+
+  <div class="copy">
+    <div class="kicker"><i></i><span id="kicker">TwitchCon San Diego</span></div>
+    <div class="where"><i></i><span><b id="zone">Stages</b> · <span id="room">Room</span></span></div>
+    <h1 id="title">Session title</h1>
+    <div class="when"><b id="time">10:00–11:00</b><span>San Diego time</span></div>
+    <p class="who" id="who"></p>
+  </div>
+
+  <div class="bottom"><div class="url">tc.jasper.stream</div><div class="note">Unofficial fan project · TwitchCon San Diego 2026, as a timeline</div></div>
+
+  <div class="tl">
+    <div class="hr" style="top:96px"></div><div class="hr" style="top:192px"></div><div class="hr" style="top:288px"></div><div class="hr" style="top:384px"></div>
+    <div class="ev" style="--c:var(--teal); left:10px; width:130px; top:20px; height:84px"></div>
+    <div class="ev" style="--c:var(--blue); left:150px; width:130px; top:40px; height:120px"></div>
+    <div class="ev me" style="left:10px; width:130px; top:128px; height:150px"><svg class="star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.8l6-.8z"/></svg></div>
+    <div class="ev" style="--c:var(--pink); left:150px; width:130px; top:184px; height:110px"></div>
+    <div class="ev" style="--c:var(--teal); left:150px; width:130px; top:318px; height:90px"></div>
+    <div class="ev" style="--c:var(--blue); left:10px; width:130px; top:302px; height:100px"></div>
+  </div>
+
+<script>
+  var ZONE_COLORS = { podia: '#6B3FD4', theaters: '#CF4F27', camp: '#0B8579', workshops: '#A06200', community: '#C2386A', tabletop: '#3A8228', meetgreet: '#1D74AD', overig: '#666E7D' };
+  // p = TCModel.preview(session)
+  window.fill = function (p) {
+    document.documentElement.style.setProperty('--zone', ZONE_COLORS[p.zone] || ZONE_COLORS.overig);
+    document.getElementById('kicker').textContent = 'TwitchCon San Diego · ' + p.dayShort;
+    document.getElementById('zone').textContent = p.zoneName;
+    document.getElementById('room').textContent = p.room;
+    document.getElementById('time').textContent = p.time;
+    document.getElementById('who').textContent = p.speakerText ? 'with ' + p.speakerText : '';
+    var h1 = document.getElementById('title');
+    h1.textContent = p.title;
+    // largest size (72 down to 40px) at which the title fits in 3 lines
+    for (var size = 72; size >= 40; size -= 2) {
+      h1.style.fontSize = size + 'px';
+      if (h1.scrollHeight <= Math.min(248, size * 3.05)) break;
+    }
+  };
+</script>
+</body>
+</html>

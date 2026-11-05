@@ -349,6 +349,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
 <div class="scrim" id="scrim" hidden></div>
 <aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title" hidden></aside>
 
+<script src="/model.js"></script>
 <script>
 (function () {
   'use strict';
@@ -356,7 +357,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
   /* ---------- live data ---------- */
   // /api/sessions (src/worker.js) proxies api.twitchcon.com (no CORS there) and caches it in KV.
   // The last good copy is also kept in localStorage, so the page still works on bad con wifi.
-  var API_URL = 'api/sessions';
+  var API_URL = '/api/sessions';
   var STORE_KEY = 'tcsd26-data';
   var FIRST_WAIT_MS = 2500;          // how long to wait for the network before falling back to the saved copy
   var REFRESH_MS = 30 * 60 * 1000;   // re-check while the page stays open (server refreshes hourly)
@@ -463,56 +464,12 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
     var HOUR_PX = 92, PAD = 16;
     var FAV_KEY = 'tcsd26-favs';
 
-    var ZONES = [
-      { id: 'podia', name: 'Stages', rooms: ['GivePLZ Stage', 'PJSugar Stage', 'Kappa Cabana Stage', 'DinoDance', 'Minecraft Stage', 'Twitch Rivals Arena', 'Glitch Theater'] },
-      { id: 'theaters', name: 'Theaters and LAN', rooms: ['NomNom Theater', 'Riot Games Theater', 'Space Jam Half-Court', 'LAN'] },
-      { id: 'camp', name: 'Creator Camp', rooms: ['Creator Camp Panels', 'Creator Camp Tools', 'Creator Camp Roundtables', 'Creator Camp Partner Lounge'] },
-      { id: 'workshops', name: 'Workshops', rooms: ['CoolCat Workshops', 'FrankerZ Workshops'] },
-      { id: 'community', name: 'Community', rooms: ['Community MeetUps 1', 'Community MeetUps 2', 'The Unity Lounge'] },
-      { id: 'tabletop', name: 'Tabletop', rooms: ['Tabletop All Day Events', 'Board Games', 'Trading Card Games', 'Magic: The Gathering', 'Pok\u00e9mon Bingo', 'D&D Intro', 'D&D Adventure Box', 'D&D Experienced', 'Chess', 'Tabletop general'] },
-      { id: 'meetgreet', name: 'Meet & Greet', rooms: ['Meet & Greet 1', 'Meet & Greet 2', 'Meet & Greet 3', 'Meet & Greet 4', 'Meet & Greet 5', 'Meet & Greet 6', 'Meet & Greet 7', 'Meet & Greet other'] },
-      { id: 'overig', name: 'Other', rooms: ['Partner Party'] }
-    ];
+    // rooms, areas and title clean-up live in model.js (shared with the link previews)
+    var ZONES = TCModel.zones();
     var ZONE_BY_ID = {}, ROOM_ZONE = {};
     ZONES.forEach(function (z) { ZONE_BY_ID[z.id] = z; z.rooms.forEach(function (r) { ROOM_ZONE[r] = z.id; }); });
-
-    var TABLETOP_MAP = {
-      'Board Games': 'Board Games',
-      'Trading Card Games': 'Trading Card Games',
-      'Magic: The Gathering': 'Magic: The Gathering',
-      'Pokemon Bingo': 'Pok\u00e9mon Bingo',
-      'Pok\u00e9mon Bingo': 'Pok\u00e9mon Bingo',
-      'Dungeons & Dragons Intro': 'D&D Intro', 'D&D Intro': 'D&D Intro',
-      'Dungeons & Dragons Adventure Box': 'D&D Adventure Box', 'D&D Adventure Box': 'D&D Adventure Box',
-      'Dungeons & Dragons Experienced': 'D&D Experienced', 'D&D Experienced': 'D&D Experienced',
-      'Chess': 'Chess', 'Grandmaster Chess': 'Chess',
-      'All Day Events': 'Tabletop All Day Events'
-    };
-
-    function roomOf(loc) {
-      var l = loc.replace(/\s+/g, ' ').trim();
-      var m = l.match(/^Meet\s*&\s*Greet\s*-\s*(\d+)$/i);
-      if (m) return 'Meet & Greet ' + m[1];
-      if (/^Meet\s*&\s*Greet$/i.test(l)) return 'Meet & Greet other';
-      if (/^Kappa Cabana/i.test(l)) return 'Kappa Cabana Stage';
-      if (/^Twitch Rivals Arena/i.test(l)) return 'Twitch Rivals Arena';
-      if (/^Space Jam/i.test(l)) return 'Space Jam Half-Court';
-      if (/^San Diego Convention Center$/i.test(l)) return 'Partner Party';
-      if (/^Tabletop$/i.test(l)) return 'Tabletop general';
-      var t = l.replace(/^Tabletop\s+/i, '');
-      return TABLETOP_MAP[t] || l;
-    }
-
-    function cleanTitle(raw, program, speakers) {
-      var t = raw.trim();
-      if (program === 'Meet & Greet') {
-        t = t.replace(/^(.*?Meet\s*&\s*Greet)\s*\|\s*/i, function (m, a) { return /^VTuber/i.test(a) ? 'VTuber: ' : ''; });
-        if (!t || /\d{1,2}:\d{2}\s*(AM|PM)/i.test(t)) {
-          t = speakers.length ? 'Meet & Greet with ' + speakers.length + ' streamers' : 'Meet & Greet';
-        }
-      }
-      return t.replace(/\s+/g, ' ').trim();
-    }
+    var roomOf = TCModel.roomOf;
+    var cleanTitle = TCModel.cleanTitle;
 
     function p2(n) { return (n < 10 ? '0' : '') + n; }
     var norm = function (s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
@@ -844,18 +801,24 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
     var panel = $('#panel'), scrim = $('#scrim');
     var openId = null;
 
-    // ?s=<session id> in the URL = that session is open, so links can be shared
+    // /s/<session id> in the URL = that session is open, so links can be shared.
+    // That path is served by functions/s/[id].js, which adds the session's own
+    // link preview (title, time, image). ?s=<id> still works for older links.
     function sessionFromUrl() {
-      try { return new URLSearchParams(location.search).get('s'); } catch (e) { return null; }
+      try {
+        var m = location.pathname.match(/^\/s\/([^/]+)\/?$/);
+        return m ? decodeURIComponent(m[1]) : new URLSearchParams(location.search).get('s');
+      } catch (e) { return null; }
     }
     function setSessionUrl(id) {
       try {
         var u = new URL(location.href);
-        if (id) u.searchParams.set('s', id); else u.searchParams.delete('s');
+        u.searchParams.delete('s');
+        u.pathname = id ? '/s/' + encodeURIComponent(id) : '/';
         history.replaceState(history.state, '', u.pathname + u.search + u.hash);
       } catch (e) { /* history unavailable */ }
     }
-    function sessionLink(id) { return location.origin + location.pathname + '?s=' + encodeURIComponent(id); }
+    function sessionLink(id) { return location.origin + '/s/' + encodeURIComponent(id); }
 
     function shareSession(s, btn) {
       var url = sessionLink(s.id);

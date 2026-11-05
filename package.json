@@ -6,9 +6,10 @@
     "dev:cron": "wrangler dev --test-scheduled",
     "deploy:worker": "wrangler deploy",
     "deploy:pages": "wrangler pages deploy public --project-name tcsd26-schedule --branch main --commit-dirty=true",
-    "deploy": "npm run deploy:worker && npm run deploy:pages",
+    "deploy": "npm run deploy:worker && npm run og:sessions && npm run deploy:pages",
     "og": "node og/render.mjs",
-    "favicon": "node og/favicon.mjs"
+    "favicon": "node og/favicon.mjs",
+    "og:sessions": "node og/sessions.mjs"
   },
   "devDependencies": {
     "opentype.js": "^1.3.4",

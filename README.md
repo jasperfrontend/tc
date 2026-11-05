@@ -36,6 +36,7 @@ It even took a solid ten seconds to render as an image. So I vibecoded this inst
 - **Areas**: filter by Stages, Theaters and LAN, Creator Camp, Workshops, Community, Tabletop, Meet & Greet.
 - **Search**: title, speaker or room.
 - **My picks**: star sessions, they're saved in your browser. No account, no login.
+- **Shareable sessions**: every session has its own link (`tc.jasper.stream/s/<id>`) with its own Discord/Slack/X preview: title, time, room, speakers and a preview image.
 - **Your time zone**: times are shown in San Diego time, plus your local time if you're not in it.
 - **Live data**: pulled from TwitchCon's own schedule API and refreshed every hour. If they move a panel, this moves with it.
 - **Con-wifi proof**: the last good schedule is kept on your device, so it still works when the convention center network gives up.
@@ -55,8 +56,10 @@ TwitchCon's API doesn't send CORS headers, so the page can't call it directly. A
 | `public/index.html` | The whole app: one HTML file, no framework, no build step |
 | `src/sessions.js` | Fetch, trim, cache and serve logic, shared by the Worker and Pages |
 | `src/worker.js` | The cron Worker (no public URL) |
+| `public/model.js` | Rooms, areas, title clean-up and preview text, shared by the page, the Functions and the image renderer |
 | `functions/api/sessions.js` | Pages Function that serves `/api/sessions` |
-| `og/` | Sources and scripts for the social preview image and favicons |
+| `functions/s/[id].js` | Pages Function for `/s/<id>`: the page with that session's link-preview tags |
+| `og/` | Sources and scripts for the preview images and favicons |
 
 ## Running it yourself
 
@@ -78,6 +81,7 @@ Deploying (`npm run deploy` does both the Worker and Pages):
 Other scripts:
 
 - `npm run og` renders `og/og.html` to `public/og.png` (the link preview image) with headless Firefox.
+- `npm run og:sessions` renders a preview image per session (`og/session.html` to `public/og/s/`, about 30 seconds for 400 sessions). It only renders new or changed sessions, and `npm run deploy` runs it before deploying Pages. A session added after the last deploy uses the general preview image until the next deploy.
 - `npm run favicon` builds the favicons from Bricolage Grotesque, using [resvg](https://github.com/linebender/resvg) (must be on your `PATH`).
 
 ## Made by
