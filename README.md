@@ -81,7 +81,7 @@ Deploying (`npm run deploy` does both the Worker and Pages):
 Other scripts:
 
 - `npm run og` renders `og/og.html` to `public/og.png` (the link preview image) with headless Firefox.
-- `npm run og:sessions` renders a preview image per session (`og/session.html` to `public/og/s/`, about 30 seconds for 400 sessions). It only renders new or changed sessions, and `npm run deploy` runs it before deploying Pages. A session added after the last deploy uses the general preview image until the next deploy.
+- `npm run og:sessions` renders a preview image per session (`og/session.html` to `public/og/s/`, about 30 seconds for 400 sessions). It only renders new or changed sessions, and `npm run deploy` runs it before deploying Pages. A session added after the last deploy uses the general preview image until the next deploy. The `Nightly preview images` GitHub Action does this every night during the event; it needs repository secrets `CLOUDFLARE_API_TOKEN` (permission: Account › Cloudflare Pages › Edit) and `CLOUDFLARE_ACCOUNT_ID`.
 - `npm run favicon` builds the favicons from Bricolage Grotesque, using [resvg](https://github.com/linebender/resvg) (must be on your `PATH`).
 
 ## Made by

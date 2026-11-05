@@ -1,0 +1,70 @@
+# Nightly: render link-preview images for new or changed sessions and redeploy
+# the Pages site, so share links for sessions TwitchCon added during the day
+# get their own image. Only deploys Pages; the cron Worker doesn't change.
+#
+# Needs repository secrets CLOUDFLARE_API_TOKEN (Account > Cloudflare Pages > Edit)
+# and CLOUDFLARE_ACCOUNT_ID. Without the token it renders but skips the deploy.
+name: Nightly preview images
+
+on:
+  schedule:
+    - cron: '30 9 * * *' # 09:30 UTC = 01:30 in San Diego, quietest time of the con day
+  workflow_dispatch:
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  render-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+    steps:
+      - name: Still worth running?
+        id: check
+        run: |
+          # TwitchCon San Diego 2026 ends 15 Nov; stop a few days after
+          if [ "$(date -u +%Y%m%d)" -gt 20261118 ]; then
+            echo "Event is over, nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.skip != 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.skip != 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.check.outputs.skip != 'true'
+        run: npm ci
+
+      - name: Install Firefox for headless rendering
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          out=$(npx --yes @puppeteer/browsers@2 install firefox@stable --path "$RUNNER_TEMP/browsers")
+          echo "$out"
+          echo "FIREFOX_PATH=$(echo "$out" | tail -n 1 | awk '{print $2}')" >> "$GITHUB_ENV"
+
+      - name: Render session preview images
+        if: steps.check.outputs.skip != 'true'
+        run: npm run og:sessions
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.check.outputs.skip != 'true' && env.HAS_TOKEN == 'true'
+        run: npm run deploy:pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Note when the deploy was skipped
+        if: steps.check.outputs.skip != 'true' && env.HAS_TOKEN != 'true'
+        run: echo "::warning::CLOUDFLARE_API_TOKEN secret is not set, rendered the images but did not deploy."

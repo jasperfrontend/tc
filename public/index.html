@@ -387,13 +387,29 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
     var time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     return d.toDateString() === now.toDateString() ? time : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ', ' + time;
   }
-  function setMeta(d, mode) {
-    var n = d.sessions.length + ' sessions.';
-    var text = mode === 'saved' ? 'Showing the copy saved on this device, from ' + stamp(d.fetchedAt) + '. ' + n
-      : d.stale ? 'TwitchCon is not responding, showing the copy from ' + stamp(d.fetchedAt) + '. ' + n
-      : 'Live from twitchcon.com, updated ' + stamp(d.fetchedAt) + '. ' + n;
-    metaEl.replaceChildren(text);
+  function ago(ms) {
+    var min = Math.max(0, Math.floor((Date.now() - ms) / 60000));
+    if (min < 1) return 'just now';
+    if (min < 60) return min + (min === 1 ? ' minute ago' : ' minutes ago');
+    var hr = Math.floor(min / 60);
+    if (hr < 24) return hr + (hr === 1 ? ' hour ago' : ' hours ago');
+    var days = Math.floor(hr / 24);
+    return days + (days === 1 ? ' day ago' : ' days ago');
   }
+  var metaShown = null; // { d, mode } currently in the header, re-rendered every minute so "x minutes ago" stays true
+  function setMeta(d, mode) {
+    metaShown = { d: d, mode: mode };
+    var n = d.sessions.length + ' sessions.';
+    var when = ago(d.fetchedAt);
+    var text = mode === 'saved' ? 'Showing the copy saved on this device, updated ' + when + '. ' + n
+      : d.stale ? 'TwitchCon is not responding, showing the copy from ' + when + '. ' + n
+      : 'Live from twitchcon.com, updated ' + when + '. ' + n;
+    metaEl.replaceChildren(text);
+    metaEl.title = 'Last fetched from TwitchCon: ' + stamp(d.fetchedAt);
+  }
+  setInterval(function () {
+    if (metaShown && !metaEl.querySelector('.meta-update')) setMeta(metaShown.d, metaShown.mode);
+  }, 60000);
   function offerUpdate() {
     var btn = document.createElement('button');
     btn.type = 'button';
