@@ -1,0 +1,126 @@
+// Shared by the Worker (src/worker.js) and the Pages Function (functions/api/sessions.js).
+
+const UPSTREAM = 'https://api.twitchcon.com/sessions?eventName=san-diego-2026';
+const KV_KEY = 'sessions';
+const STALE_AFTER_MS = 20 * 60 * 1000;     // no successful refresh for this long = flag as stale
+const MEMO_MS = 60 * 1000;                 // per-isolate memory cache, saves KV reads
+const RETRY_MS = 60 * 1000;                // min gap between on-request refresh attempts per isolate
+export const REFRESH_UNTIL = Date.UTC(2026, 10, 18); // stop polling TwitchCon a few days after the event
+
+let memo = null;        // { body, fetchedAt, at }
+let lastAttempt = 0;
+
+
+export async function serveSessions(env, ctx) {
+  const now = Date.now();
+  let entry = memo && now - memo.at < MEMO_MS ? memo : null;
+
+  if (!entry) {
+    const { value, metadata } = await env.SCHEDULE.getWithMetadata(KV_KEY);
+    if (value) entry = memo = { body: value, fetchedAt: metadata?.fetchedAt ?? 0, at: now };
+  }
+
+  // nothing stored yet (first deploy), so fetch it right now
+  if (!entry) {
+    lastAttempt = now;
+    const fresh = await refresh(env);
+    if (!fresh) {
+      return json('{"error":"Could not reach the TwitchCon schedule. Try again in a minute."}', 502, 'no-store');
+    }
+    entry = memo = { body: fresh.body, fetchedAt: fresh.fetchedAt, at: now };
+  }
+
+  let body = entry.body;
+  if (now - entry.fetchedAt > STALE_AFTER_MS) {
+    // the cron should have refreshed by now; try in the background and say it's stale
+    if (now < REFRESH_UNTIL && now - lastAttempt > RETRY_MS) {
+      lastAttempt = now;
+      ctx.waitUntil(refresh(env).then((fresh) => { if (fresh) memo = null; }));
+    }
+    if (now < REFRESH_UNTIL) body = body.replace('"stale":false', '"stale":true');
+  }
+  return json(body, 200, 'public, max-age=60');
+}
+
+/** Fetch TwitchCon, trim, store in KV. Returns { body, fetchedAt } or null on failure. */
+export async function refresh(env) {
+  let raw;
+  try {
+    const res = await fetch(UPSTREAM, {
+      headers: { Accept: 'application/json', 'User-Agent': 'tcsd26-schedule-viewer' },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    raw = await res.json();
+  } catch (err) {
+    console.error('TwitchCon fetch failed:', String(err));
+    return null;
+  }
+
+  const sessions = trimSessions(raw);
+  if (!sessions) {
+    console.error('TwitchCon returned no usable sessions, keeping the old copy');
+    return null;
+  }
+
+  const fetchedAt = Date.now();
+  const version = await shortHash(JSON.stringify(sessions));
+  const body = JSON.stringify({ fetchedAt, version, stale: false, sessions });
+  await env.SCHEDULE.put(KV_KEY, body, { metadata: { fetchedAt, version } });
+  return { body, fetchedAt };
+}
+
+/** Trim the raw API response to the compact shape the page reads. Null if it looks wrong. */
+function trimSessions(json) {
+  if (!json || !Array.isArray(json.sessions)) return null;
+  const out = [];
+  const seen = new Set();
+  for (const row of json.sessions) {
+    const d = row && row.data;
+    const id = row && row.sessionId;
+    if (!d || typeof id !== 'string' || d.private) continue;
+    const s = Date.parse(d.startTimestamp);
+    const e = Date.parse(d.endTimestamp);
+    const title = String(d.title ?? '').trim();
+    const loc = String(d.location ?? '').trim();
+    if (!Number.isFinite(s) || !Number.isFinite(e) || !title) continue;
+
+    // TwitchCon lists a few sessions twice under different IDs
+    const key = [title, loc, s, e].join('|');
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    const item = {
+      id,
+      t: title,
+      d: String(d.description ?? '').trim(),
+      p: String(d.program ?? '').trim(),
+      l: loc,
+      s,
+      e,
+      g: (Array.isArray(d.tags) ? d.tags : []).map(String).filter(Boolean),
+      sp: (Array.isArray(d.speakers) ? d.speakers : [])
+        .map((sp) => String(sp?.name ?? '').trim())
+        .filter(Boolean),
+    };
+    if (d.mobileOnly) item.m = 1;
+    out.push(item);
+  }
+  return out.length ? out : null;
+}
+
+async function shortHash(text) {
+  const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].slice(0, 6).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+function json(body, status, cacheControl) {
+  return new Response(body, {
+    status,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': cacheControl,
+      'X-Content-Type-Options': 'nosniff',
+    },
+  });
+}

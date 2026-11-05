@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TwitchCon San Diego 2026 - schedule</title>
+<meta name="description" content="The TwitchCon San Diego 2026 schedule as a timeline: every stage and room side by side, live from the official schedule data, with a star for the sessions you don't want to miss. Unofficial fan project.">
+<meta name="theme-color" content="#00c8af">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://tc.jasper.stream/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="tc.jasper.stream">
+<meta property="og:url" content="https://tc.jasper.stream/">
+<meta property="og:title" content="TwitchCon San Diego 2026, but as a timeline">
+<meta property="og:description" content="Every stage and room side by side, live schedule data, and a star for the panels you can't miss. 13-15 November 2026. Unofficial fan project.">
+<meta property="og:image" content="https://tc.jasper.stream/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TwitchCon, but as a timeline: a colourful schedule grid with starred sessions, at tc.jasper.stream">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TwitchCon San Diego 2026, but as a timeline">
+<meta name="twitter:description" content="Every stage and room side by side, live schedule data, and a star for the panels you can't miss. Unofficial fan project.">
+<meta name="twitter:image" content="https://tc.jasper.stream/og.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&family=Bricolage+Grotesque:wght@600;700&display=swap">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+  --bg: #F2F4F8;
+  --surface: #FFFFFF;
+  --ink: #14171F;
+  --muted: #586174;
+  --line: #CDD4E0;
+  --line-soft: #E4E8F0;
+  --tint: 13%;
+  --tint-hover: 22%;
+  --star: #B7791F;
+  --now-bg: #C81E36;
+  --now-ink: #FFFFFF;
+  --z-podia: #6B3FD4;
+  --z-theaters: #CF4F27;
+  --z-camp: #0B8579;
+  --z-workshops: #A06200;
+  --z-community: #C2386A;
+  --z-tabletop: #3A8228;
+  --z-meetgreet: #1D74AD;
+  --z-overig: #666E7D;
+  --f-display: 'Bricolage Grotesque', 'Trebuchet MS', system-ui, sans-serif;
+  --f-text: 'Barlow Semi Condensed', 'Arial Narrow', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0E1117;
+    --surface: #171B24;
+    --ink: #E9ECF2;
+    --muted: #9AA4B5;
+    --line: #333A47;
+    --line-soft: #252B36;
+    --tint: 22%;
+    --tint-hover: 32%;
+    --star: #F2B84B;
+    --now-bg: #FF5D73;
+    --now-ink: #1A0A0D;
+    --z-podia: #A98BFF;
+    --z-theaters: #FF8A63;
+    --z-camp: #3FD0C0;
+    --z-workshops: #F0B34A;
+    --z-community: #FF7AA6;
+    --z-tabletop: #7CCB66;
+    --z-meetgreet: #5EB6F2;
+    --z-overig: #A0A8B6;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0E1117;
+  --surface: #171B24;
+  --ink: #E9ECF2;
+  --muted: #9AA4B5;
+  --line: #333A47;
+  --line-soft: #252B36;
+  --tint: 22%;
+  --tint-hover: 32%;
+  --star: #F2B84B;
+  --now-bg: #FF5D73;
+  --now-ink: #1A0A0D;
+  --z-podia: #A98BFF;
+  --z-theaters: #FF8A63;
+  --z-camp: #3FD0C0;
+  --z-workshops: #F0B34A;
+  --z-community: #FF7AA6;
+  --z-tabletop: #7CCB66;
+  --z-meetgreet: #5EB6F2;
+  --z-overig: #A0A8B6;
+}
+
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.4 var(--f-text);
+  -webkit-text-size-adjust: 100%;
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* header and controls */
+.top { flex: none; padding: 14px 16px 12px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top-row { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: flex-end; justify-content: space-between; }
+h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
+.meta { margin: 5px 0 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
+.meta-update { padding: 0; border: 0; background: none; color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.search input {
+  width: 250px; max-width: 100%; height: 38px; padding: 0 12px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: inherit;
+}
+.search input::placeholder { color: var(--muted); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { height: 36px; padding: 0 14px; background: var(--surface); border: 0; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); font-weight: 600; }
+.favbtn {
+  display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 12px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer;
+}
+.favbtn svg, .star svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.favbtn[aria-pressed="true"] { border-color: var(--star); background: color-mix(in srgb, var(--star) 16%, var(--surface)); font-weight: 600; }
+.favbtn[aria-pressed="true"] svg { fill: var(--star); stroke: var(--star); }
+.favbtn .n { color: var(--muted); font-weight: 400; }
+
+.days, .zones { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: thin; }
+.days { margin-top: 14px; }
+.zones { margin-top: 10px; gap: 6px; padding-bottom: 2px; }
+.day {
+  flex: none; min-width: 112px; padding: 6px 14px 7px; text-align: left; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+  display: flex; flex-direction: column;
+}
+.day b { font: 600 17px/1.15 var(--f-display); }
+.day span { font-size: 13.5px; color: var(--muted); }
+.day[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.day[aria-pressed="true"] span { color: color-mix(in srgb, var(--surface) 78%, var(--ink)); }
+.zchip {
+  flex: none; display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); cursor: pointer;
+  white-space: nowrap; font-size: 15px;
+}
+.zchip i { width: 9px; height: 9px; border-radius: 50%; background: var(--z); flex: none; }
+.zchip .n { color: var(--muted); font-size: 13.5px; }
+.zchip[aria-pressed="true"] { border-color: var(--z); background: color-mix(in srgb, var(--z) var(--tint), var(--surface)); font-weight: 600; }
+.zchip[data-z="alles"] { --z: var(--ink); }
+.zchip[data-z="alles"] i { display: none; }
+
+/* stage */
+.stage { flex: 1; min-height: 0; overflow: auto; position: relative; overscroll-behavior: contain; background: var(--bg); }
+.stage:focus { outline: none; }
+.foot { flex: none; padding: 7px 16px; border-top: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: 13px; line-height: 1.35; }
+.foot p { margin: 0; }
+.foot p + p { margin-top: 2px; font-size: 12px; }
+.foot a { color: var(--ink); font-weight: 600; text-underline-offset: 2px; }
+
+.board {
+  --tw: 84px; --cw: 176px;
+  display: grid;
+  grid-template-columns: var(--tw) repeat(var(--cols), minmax(var(--cw), 1fr));
+  min-width: calc(var(--tw) + var(--cols) * var(--cw));
+}
+.corner {
+  position: sticky; top: 0; left: 0; z-index: 6; padding: 8px; display: flex; flex-direction: column; justify-content: flex-end;
+  background: var(--surface); border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+  font-size: 12.5px; line-height: 1.25; text-align: right;
+}
+.corner b { font-weight: 600; }
+.corner span { color: var(--muted); }
+.colhead {
+  position: sticky; top: 0; z-index: 4; min-height: 54px; padding: 7px 9px 8px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  background: var(--surface); border-top: 3px solid var(--z); border-bottom: 1px solid var(--line); border-left: 1px solid var(--line-soft);
+}
+.colhead b { font: 600 14.5px/1.15 var(--f-display); }
+.colhead span { font-size: 12.5px; color: var(--muted); }
+.timecol { position: sticky; left: 0; z-index: 3; height: var(--H); background: var(--bg); border-right: 1px solid var(--line); }
+.tl { position: absolute; right: 9px; transform: translateY(-50%); text-align: right; line-height: 1.15; }
+.tl b { font-weight: 600; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.tl span { display: block; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.colbody {
+  position: relative; height: var(--H); background-color: var(--surface); border-left: 1px solid var(--line-soft);
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(var(--line-soft) 1px, transparent 1px);
+  background-size: 100% var(--hour), 100% calc(var(--hour) / 2);
+  background-position: 0 var(--pad), 0 var(--pad);
+  background-repeat: repeat-y;
+}
+.nowline { position: absolute; left: 0; right: 0; height: 2px; background: var(--now-bg); z-index: 2; pointer-events: none; }
+
+.card {
+  position: absolute; display: flex; flex-direction: column; gap: 1px; overflow: hidden; margin: 0; text-align: left; cursor: pointer;
+  padding: 3px 18px 3px 8px;
+  background: color-mix(in srgb, var(--z) var(--tint), var(--surface));
+  border: 1px solid color-mix(in srgb, var(--z) 38%, var(--surface));
+  border-left: 4px solid var(--z);
+  border-radius: 6px;
+}
+.card:hover { background: color-mix(in srgb, var(--z) var(--tint-hover), var(--surface)); }
+.card.xs { padding-top: 1px; padding-bottom: 1px; }
+.c-title {
+  font-weight: 600; font-size: 13.5px; line-height: 16px; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--lines, 2); line-clamp: var(--lines, 2); overflow: hidden;
+}
+.card.xs .c-title { font-size: 12.5px; line-height: 15px; }
+.c-time, .c-spk { font-size: 12.5px; line-height: 15px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .fav { position: absolute; top: 3px; right: 4px; width: 12px; height: 12px; fill: var(--star); stroke: var(--star); stroke-width: 1.5; }
+
+/* agenda */
+.agenda { max-width: 940px; margin: 0 auto; padding: 4px 14px 48px; }
+.slot { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 0 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.slot-time { position: sticky; top: 10px; align-self: start; line-height: 1.15; }
+.slot-time b { display: block; font: 700 21px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.slot-time span { font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.row {
+  display: flex; align-items: stretch;
+  background: color-mix(in srgb, var(--z) var(--tint), var(--surface));
+  border: 1px solid color-mix(in srgb, var(--z) 38%, var(--surface)); border-left: 4px solid var(--z); border-radius: 6px;
+}
+.row-main { flex: 1; min-width: 0; display: grid; gap: 3px; padding: 9px 11px; text-align: left; background: none; border: 0; cursor: pointer; }
+.row-main:hover { background: color-mix(in srgb, var(--z) 8%, transparent); }
+.r-title { font-weight: 600; font-size: 17px; line-height: 1.2; overflow-wrap: anywhere; }
+.r-meta { display: flex; flex-wrap: wrap; gap: 2px 16px; font-size: 14px; color: var(--muted); }
+.r-room { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-weight: 500; }
+.r-room i, .pz i { width: 9px; height: 9px; border-radius: 50%; background: var(--z); flex: none; }
+.star { flex: none; width: 46px; display: grid; place-items: center; background: none; border: 0; border-left: 1px solid color-mix(in srgb, var(--z) 25%, var(--surface)); cursor: pointer; color: var(--muted); }
+.star[aria-pressed="true"] { color: var(--star); }
+.star[aria-pressed="true"] svg { fill: var(--star); }
+.live { align-self: center; padding: 0 7px; border-radius: 4px; background: var(--now-bg); color: var(--now-ink); font-size: 12.5px; font-weight: 600; line-height: 18px; }
+
+.empty { max-width: 460px; margin: 12vh auto 0; padding: 0 20px; text-align: center; }
+.empty p { margin: 0 0 8px; }
+.empty .lead { font: 600 20px/1.2 var(--f-display); }
+.empty .sub { color: var(--muted); }
+.btn { margin-top: 10px; height: 38px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 8px; background: var(--ink); color: var(--surface); font-weight: 600; cursor: pointer; }
+.btn.ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
+
+/* detail panel */
+.scrim { position: fixed; inset: 0; z-index: 20; background: rgba(8, 10, 16, 0.5); }
+.panel {
+  position: fixed; z-index: 21; top: 0; right: 0; bottom: 0; width: min(470px, 100%); overflow: auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 22px calc(env(safe-area-inset-bottom, 0px) + 28px);
+  background: var(--surface); border-left: 1px solid var(--line); box-shadow: -12px 0 32px rgba(8, 10, 16, 0.18);
+  animation: slide-in 0.2s ease-out;
+}
+@keyframes slide-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.panel[hidden], .scrim[hidden] { display: none; }
+.p-close { position: absolute; top: calc(env(safe-area-inset-top, 0px) + 12px); right: 14px; height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; }
+.pz { display: inline-flex; align-items: center; gap: 7px; margin-right: 70px; color: var(--muted); font-size: 14.5px; }
+.panel h2 { margin: 8px 0 14px; font: 700 25px/1.12 var(--f-display); letter-spacing: -0.005em; overflow-wrap: anywhere; }
+.p-time { display: grid; gap: 2px; margin: 0 0 14px; font-size: 16px; font-variant-numeric: tabular-nums; }
+.p-time .day-line { color: var(--muted); }
+.p-time .you { color: var(--muted); }
+.p-time b { font-weight: 600; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; padding: 0; list-style: none; }
+.tags li { padding: 2px 9px; border: 1px solid var(--line); border-radius: 999px; font-size: 13.5px; }
+.tags li.app { border-color: var(--ink); font-weight: 600; }
+.p-desc { margin: 0 0 16px; white-space: pre-line; max-width: 62ch; line-height: 1.5; }
+.p-h { margin: 18px 0 8px; font: 600 16px/1.2 var(--f-display); }
+.spk { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.spk a { display: inline-block; padding: 3px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); text-decoration: none; font-size: 14.5px; }
+.spk a:hover { border-color: var(--ink); }
+.p-fav { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; }
+.p-fav svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.p-fav[aria-pressed="true"] { border-color: var(--star); background: color-mix(in srgb, var(--star) 16%, var(--surface)); font-weight: 600; }
+.p-fav[aria-pressed="true"] svg { fill: var(--star); stroke: var(--star); }
+.conc { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.conc button {
+  width: 100%; display: grid; gap: 1px; padding: 7px 10px; text-align: left; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--z) 38%, var(--surface)); border-left: 4px solid var(--z); border-radius: 6px;
+  background: color-mix(in srgb, var(--z) var(--tint), var(--surface));
+}
+.conc b { font-weight: 600; line-height: 1.2; }
+.conc span { font-size: 13.5px; color: var(--muted); }
+.conc-more { margin: 8px 0 0; font-size: 14px; color: var(--muted); }
+
+@media (max-width: 720px) {
+  h1 { font-size: 24px; }
+  .top { padding: 12px 12px 10px; }
+  .search { flex: 1 1 100%; }
+  .search input { width: 100%; }
+  .board { --tw: 66px; --cw: 156px; }
+  .tl { right: 6px; }
+  .slot { grid-template-columns: 56px minmax(0, 1fr); gap: 0 10px; }
+  .slot-time b { font-size: 18px; }
+  .panel {
+    top: auto; left: 0; width: 100%; max-height: 88dvh; border-left: 0; border-top: 1px solid var(--line);
+    border-radius: 16px 16px 0 0; box-shadow: 0 -12px 32px rgba(8, 10, 16, 0.18);
+    animation-name: sheet-in;
+  }
+  @keyframes sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel { animation: none; }
+}
+</style>
+</head>
+<body>
+<header class="top" id="top">
+  <div class="top-row">
+    <div>
+      <h1>TwitchCon San Diego 2026</h1>
+      <p class="meta" id="meta"></p>
+    </div>
+    <div class="tools">
+      <label class="search"><span class="sr">Search the schedule</span><input id="q" type="search" placeholder="Search title, speaker or room" autocomplete="off"></label>
+      <div class="seg" role="group" aria-label="View">
+        <button type="button" data-view="grid" aria-pressed="true">Timeline</button>
+        <button type="button" data-view="list" aria-pressed="false">Agenda</button>
+      </div>
+      <button type="button" class="favbtn" id="favToggle" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.8l6-.8z"/></svg>
+        <span>My picks</span><span class="n" id="favCount"></span>
+      </button>
+    </div>
+  </div>
+  <nav class="days" id="days" aria-label="Day"></nav>
+  <nav class="zones" id="zones" aria-label="Area"></nav>
+</header>
+<main class="stage" id="stage" tabindex="-1"></main>
+<footer class="foot" id="foot">
+  <p>Vibecoded in 10 minutes with Claude Code because TwitchCon's schedule page is terrible. You're welcome ❤️ - <a href="https://www.twitch.tv/JasperDiscovers" target="_blank" rel="noopener">JasperDiscovers</a></p>
+  <p>Unofficial fan project, not affiliated with or endorsed by Twitch, TwitchCon or Amazon. Schedule data comes from TwitchCon and may change, so check the official app before you head out.</p>
+</footer>
+<div class="scrim" id="scrim" hidden></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title" hidden></aside>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- live data ---------- */
+  // /api/sessions (src/worker.js) proxies api.twitchcon.com (no CORS there) and caches it in KV.
+  // The last good copy is also kept in localStorage, so the page still works on bad con wifi.
+  var API_URL = 'api/sessions';
+  var STORE_KEY = 'tcsd26-data';
+  var FIRST_WAIT_MS = 2500;          // how long to wait for the network before falling back to the saved copy
+  var REFRESH_MS = 10 * 60 * 1000;   // re-check while the page stays open
+
+  var metaEl = document.getElementById('meta');
+  var stageEl = document.getElementById('stage');
+  var shown = null, lastCheck = 0, checking = false;
+
+  function validData(d) { return !!(d && Array.isArray(d.sessions) && d.sessions.length); }
+  function readStored() {
+    try { var d = JSON.parse(localStorage.getItem(STORE_KEY)); return validData(d) ? d : null; } catch (e) { return null; }
+  }
+  function store(d) { try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); } catch (e) { /* storage unavailable or full */ } }
+
+  function fetchData() {
+    var ctl = typeof AbortController === 'function' ? new AbortController() : null;
+    var timer = ctl ? setTimeout(function () { ctl.abort(); }, 20000) : null;
+    return fetch(API_URL, { headers: { Accept: 'application/json' }, signal: ctl ? ctl.signal : undefined })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (d) { clearTimeout(timer); if (!validData(d)) throw new Error('no sessions'); return d; },
+            function (err) { clearTimeout(timer); throw err; });
+  }
+
+  function stamp(ms) {
+    var d = new Date(ms), now = new Date();
+    var time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    return d.toDateString() === now.toDateString() ? time : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ', ' + time;
+  }
+  function setMeta(d, mode) {
+    var n = d.sessions.length + ' sessions.';
+    var text = mode === 'saved' ? 'Showing the copy saved on this device, from ' + stamp(d.fetchedAt) + '. ' + n
+      : d.stale ? 'TwitchCon is not responding, showing the copy from ' + stamp(d.fetchedAt) + '. ' + n
+      : 'Live from twitchcon.com, updated ' + stamp(d.fetchedAt) + '. ' + n;
+    metaEl.replaceChildren(text);
+  }
+  function offerUpdate() {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'meta-update';
+    btn.textContent = 'Load the new version';
+    btn.addEventListener('click', function () { location.reload(); });
+    metaEl.replaceChildren('The schedule has changed. ', btn);
+  }
+  function showStatus(lead, sub, retry) {
+    var box = document.createElement('div');
+    box.className = 'empty';
+    box.setAttribute('role', 'status');
+    var p1 = document.createElement('p'); p1.className = 'lead'; p1.textContent = lead; box.append(p1);
+    if (sub) { var p2 = document.createElement('p'); p2.className = 'sub'; p2.textContent = sub; box.append(p2); }
+    if (retry) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn'; b.textContent = 'Try again';
+      b.addEventListener('click', function () { showStatus('Loading the schedule...'); refresh(); });
+      box.append(b);
+    }
+    stageEl.replaceChildren(box);
+  }
+
+  function boot(d, mode) {
+    if (shown) return;
+    shown = d;
+    start(d);
+    setMeta(d, mode);
+  }
+
+  function refresh() {
+    if (checking) return;
+    checking = true;
+    lastCheck = Date.now();
+    fetchData().then(function (d) {
+      checking = false;
+      store(d);
+      if (!shown) { boot(d, 'live'); return; }
+      if (d.version !== shown.version) { offerUpdate(); return; }
+      shown = d;
+      setMeta(d, 'live');
+    }, function () {
+      checking = false;
+      if (shown) { if (!metaEl.querySelector('.meta-update')) setMeta(shown, 'saved'); return; }
+      var saved = readStored();
+      if (saved) boot(saved, 'saved');
+      else showStatus('Could not load the schedule.', 'Check your connection and try again.', true);
+    });
+  }
+
+  (function init() {
+    var saved = readStored();
+    showStatus('Loading the schedule...');
+    refresh();
+    if (saved) setTimeout(function () { if (!shown) boot(saved, 'saved'); }, FIRST_WAIT_MS);
+    setInterval(function () { if (!document.hidden) refresh(); }, REFRESH_MS);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && Date.now() - lastCheck > REFRESH_MS) refresh();
+    });
+  })();
+
+  /* ---------- the app, started once with a data set ---------- */
+  function start(DATA) {
+    var SD_TZ = 'America/Los_Angeles';
+    var USER_TZ = (function () {
+      try { return Intl.DateTimeFormat().resolvedOptions().timeZone || SD_TZ; } catch (e) { return SD_TZ; }
+    })();
+    var SAME_TZ = USER_TZ === SD_TZ;
+    var HOUR_PX = 92, PAD = 16;
+    var FAV_KEY = 'tcsd26-favs';
+
+    var ZONES = [
+      { id: 'podia', name: 'Stages', rooms: ['GivePLZ Stage', 'PJSugar Stage', 'Kappa Cabana Stage', 'DinoDance', 'Minecraft Stage', 'Twitch Rivals Arena', 'Glitch Theater'] },
+      { id: 'theaters', name: 'Theaters and LAN', rooms: ['NomNom Theater', 'Riot Games Theater', 'Space Jam Half-Court', 'LAN'] },
+      { id: 'camp', name: 'Creator Camp', rooms: ['Creator Camp Panels', 'Creator Camp Tools', 'Creator Camp Roundtables', 'Creator Camp Partner Lounge'] },
+      { id: 'workshops', name: 'Workshops', rooms: ['CoolCat Workshops', 'FrankerZ Workshops'] },
+      { id: 'community', name: 'Community', rooms: ['Community MeetUps 1', 'Community MeetUps 2', 'The Unity Lounge'] },
+      { id: 'tabletop', name: 'Tabletop', rooms: ['Tabletop All Day Events', 'Board Games', 'Trading Card Games', 'Magic: The Gathering', 'Pok\u00e9mon Bingo', 'D&D Intro', 'D&D Adventure Box', 'D&D Experienced', 'Chess', 'Tabletop general'] },
+      { id: 'meetgreet', name: 'Meet & Greet', rooms: ['Meet & Greet 1', 'Meet & Greet 2', 'Meet & Greet 3', 'Meet & Greet 4', 'Meet & Greet 5', 'Meet & Greet 6', 'Meet & Greet 7', 'Meet & Greet other'] },
+      { id: 'overig', name: 'Other', rooms: ['Partner Party'] }
+    ];
+    var ZONE_BY_ID = {}, ROOM_ZONE = {};
+    ZONES.forEach(function (z) { ZONE_BY_ID[z.id] = z; z.rooms.forEach(function (r) { ROOM_ZONE[r] = z.id; }); });
+
+    var TABLETOP_MAP = {
+      'Board Games': 'Board Games',
+      'Trading Card Games': 'Trading Card Games',
+      'Magic: The Gathering': 'Magic: The Gathering',
+      'Pokemon Bingo': 'Pok\u00e9mon Bingo',
+      'Pok\u00e9mon Bingo': 'Pok\u00e9mon Bingo',
+      'Dungeons & Dragons Intro': 'D&D Intro', 'D&D Intro': 'D&D Intro',
+      'Dungeons & Dragons Adventure Box': 'D&D Adventure Box', 'D&D Adventure Box': 'D&D Adventure Box',
+      'Dungeons & Dragons Experienced': 'D&D Experienced', 'D&D Experienced': 'D&D Experienced',
+      'Chess': 'Chess', 'Grandmaster Chess': 'Chess',
+      'All Day Events': 'Tabletop All Day Events'
+    };
+
+    function roomOf(loc) {
+      var l = loc.replace(/\s+/g, ' ').trim();
+      var m = l.match(/^Meet\s*&\s*Greet\s*-\s*(\d+)$/i);
+      if (m) return 'Meet & Greet ' + m[1];
+      if (/^Meet\s*&\s*Greet$/i.test(l)) return 'Meet & Greet other';
+      if (/^Kappa Cabana/i.test(l)) return 'Kappa Cabana Stage';
+      if (/^Twitch Rivals Arena/i.test(l)) return 'Twitch Rivals Arena';
+      if (/^Space Jam/i.test(l)) return 'Space Jam Half-Court';
+      if (/^San Diego Convention Center$/i.test(l)) return 'Partner Party';
+      if (/^Tabletop$/i.test(l)) return 'Tabletop general';
+      var t = l.replace(/^Tabletop\s+/i, '');
+      return TABLETOP_MAP[t] || l;
+    }
+
+    function cleanTitle(raw, program, speakers) {
+      var t = raw.trim();
+      if (program === 'Meet & Greet') {
+        t = t.replace(/^(.*?Meet\s*&\s*Greet)\s*\|\s*/i, function (m, a) { return /^VTuber/i.test(a) ? 'VTuber: ' : ''; });
+        if (!t || /\d{1,2}:\d{2}\s*(AM|PM)/i.test(t)) {
+          t = speakers.length ? 'Meet & Greet with ' + speakers.length + ' streamers' : 'Meet & Greet';
+        }
+      }
+      return t.replace(/\s+/g, ' ').trim();
+    }
+
+    function p2(n) { return (n < 10 ? '0' : '') + n; }
+    var norm = function (s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
+
+    var sdFmt = new Intl.DateTimeFormat('en-US', { timeZone: SD_TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+    function sdParts(ms) {
+      var o = {};
+      sdFmt.formatToParts(new Date(ms)).forEach(function (p) { o[p.type] = p.value; });
+      return { y: +o.year, mo: +o.month, d: +o.day, mins: (+o.hour) * 60 + (+o.minute) };
+    }
+    function dayKeyOf(p) { return p.y + '-' + p2(p.mo) + '-' + p2(p.d); }
+    function laToMs(y, mo, d, mins) {
+      var guess = Date.UTC(y, mo - 1, d, 0, mins) + 8 * 3600000;
+      var p = sdParts(guess);
+      var got = Date.UTC(p.y, p.mo - 1, p.d, 0, p.mins);
+      var want = Date.UTC(y, mo - 1, d, 0, mins);
+      return guess + (want - got);
+    }
+    function timeFmt(tz) { return new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); }
+    var tfSD = timeFmt(SD_TZ), tfUser = timeFmt(USER_TZ);
+    var userDayFmt = new Intl.DateTimeFormat('en-CA', { timeZone: USER_TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
+    function userDayDelta(ms, sdDay) {
+      var a = userDayFmt.format(new Date(ms)).split('-').map(Number);
+      var b = sdDay.split('-').map(Number);
+      return Math.round((Date.UTC(a[0], a[1] - 1, a[2]) - Date.UTC(b[0], b[1] - 1, b[2])) / 86400000);
+    }
+    function durText(min) {
+      var h = Math.floor(min / 60), m = min % 60;
+      if (!h) return m + ' min';
+      return m ? h + ' h ' + m + ' min' : h + ' h';
+    }
+
+    // catch unknown rooms
+    DATA.sessions.forEach(function (r) {
+      var rm = roomOf(r.l);
+      if (!ROOM_ZONE[rm]) { ZONE_BY_ID.overig.rooms.push(rm); ROOM_ZONE[rm] = 'overig'; }
+    });
+    var ALL_ROOMS = [];
+    ZONES.forEach(function (z) { z.rooms.forEach(function (r) { ALL_ROOMS.push({ name: r, zone: z.id }); }); });
+    var ROOM_ORDER = {};
+    ALL_ROOMS.forEach(function (r, i) { ROOM_ORDER[r.name] = i; });
+
+    var SESS = DATA.sessions.map(function (r) {
+      var a = sdParts(r.s), b = sdParts(r.e);
+      var day = dayKeyOf(a);
+      var endMin = dayKeyOf(b) === day ? b.mins : 1440;
+      if (endMin <= a.mins) endMin = Math.min(1440, a.mins + 15);
+      var room = roomOf(r.l);
+      var zone = ROOM_ZONE[room];
+      var title = cleanTitle(r.t, r.p, r.sp);
+      return {
+        id: r.id, title: title, desc: r.d, program: r.p, room: room, zone: zone,
+        start: r.s, end: r.e, day: day, startMin: a.mins, endMin: endMin,
+        tags: r.g, speakers: r.sp, appOnly: !!r.m,
+        hay: norm([title, r.d, r.sp.join(' '), r.g.join(' '), room, ZONE_BY_ID[zone].name, r.p].join(' '))
+      };
+    });
+    var BY_ID = {};
+    SESS.forEach(function (s) { BY_ID[s.id] = s; });
+
+    var DAYS = Array.from(new Set(SESS.map(function (s) { return s.day; }))).sort().map(function (k) {
+      var p = k.split('-').map(Number);
+      var dt = new Date(Date.UTC(p[0], p[1] - 1, p[2], 12));
+      var wd = dt.toLocaleDateString('en-GB', { weekday: 'long', timeZone: 'UTC' });
+      return {
+        key: k, y: p[0], m: p[1], d: p[2], slug: wd.toLowerCase(),
+        name: wd.charAt(0).toUpperCase() + wd.slice(1),
+        short: dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }),
+        long: dt.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' })
+      };
+    });
+    var DAY_BY_KEY = {};
+    DAYS.forEach(function (d) { DAY_BY_KEY[d.key] = d; });
+
+    // favourites
+    var favs = (function () {
+      try { var v = localStorage.getItem(FAV_KEY); return new Set(v ? JSON.parse(v) : []); } catch (e) { return new Set(); }
+    })();
+    function saveFavs() { try { localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(favs))); } catch (e) { /* storage unavailable */ } }
+
+    var state = { day: null, zone: 'podia', view: 'grid', q: '', fav: false };
+
+    var $ = function (s) { return document.querySelector(s); };
+    function h(tag, props) {
+      var el = document.createElement(tag);
+      if (props) {
+        Object.keys(props).forEach(function (k) {
+          var v = props[k];
+          if (v == null || v === false) return;
+          if (k === 'class') el.className = v;
+          else if (k === 'style') el.style.cssText = v;
+          else if (k === 'text') el.textContent = v;
+          else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), v);
+          else el.setAttribute(k, v === true ? '' : v);
+        });
+      }
+      for (var i = 2; i < arguments.length; i++) {
+        var kid = arguments[i];
+        if (kid == null || kid === false) continue;
+        if (Array.isArray(kid)) { kid.forEach(function (x) { if (x) el.append(x); }); continue; }
+        el.append(kid.nodeType ? kid : document.createTextNode(kid));
+      }
+      return el;
+    }
+    var STAR_PATH = 'M12 3.5l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.8l6-.8z';
+    function starSvg(cls) {
+      var ns = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('aria-hidden', 'true');
+      if (cls) svg.setAttribute('class', cls);
+      var path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', STAR_PATH);
+      svg.appendChild(path);
+      return svg;
+    }
+
+    function nowInfo() { var p = sdParts(Date.now()); return { key: dayKeyOf(p), mins: p.mins }; }
+    function isLive(s) { var n = Date.now(); return n >= s.start && n < s.end; }
+
+    function zonesAvailable(day) {
+      var set = new Set();
+      SESS.forEach(function (s) { if (s.day === day) set.add(s.zone); });
+      return set;
+    }
+    function zoneEff() {
+      return (state.zone === 'alles' || !zonesAvailable(state.day).has(state.zone)) ? 'alles' : state.zone;
+    }
+    function ok(s, ignore, zoneOverride) {
+      if (ignore !== 'day' && s.day !== state.day) return false;
+      var z = zoneOverride || state.zone;
+      if (ignore !== 'zone' && z !== 'alles' && s.zone !== z) return false;
+      if (state.fav && !favs.has(s.id)) return false;
+      if (state.q && s.hay.indexOf(state.q) === -1) return false;
+      return true;
+    }
+
+    /* ---------- controls ---------- */
+    function renderDays() {
+      var nav = $('#days');
+      nav.replaceChildren.apply(nav, DAYS.map(function (d) {
+        var n = SESS.filter(function (s) { return s.day === d.key && ok(s, 'day'); }).length;
+        return h('button', {
+          type: 'button', class: 'day', 'aria-pressed': String(d.key === state.day),
+          onclick: function () { setDay(d.key); }
+        }, h('b', { text: d.name }), h('span', { text: d.short + ', ' + n + (n === 1 ? ' session' : ' sessions') }));
+      }));
+    }
+    function renderZones() {
+      var nav = $('#zones');
+      var avail = zonesAvailable(state.day);
+      var eff = zoneEff();
+      var counts = {}, total = 0;
+      SESS.forEach(function (s) {
+        if (ok(s, 'zone')) { counts[s.zone] = (counts[s.zone] || 0) + 1; total++; }
+      });
+      var chips = [chip('alles', 'All', total, eff === 'alles')];
+      ZONES.forEach(function (z) {
+        if (avail.has(z.id)) chips.push(chip(z.id, z.name, counts[z.id] || 0, eff === z.id));
+      });
+      nav.replaceChildren.apply(nav, chips);
+    }
+    function chip(id, name, n, active) {
+      return h('button', {
+        type: 'button', class: 'zchip', 'data-z': id, style: id === 'alles' ? null : '--z:var(--z-' + id + ')',
+        'aria-pressed': String(active),
+        onclick: function () { state.zone = id; render({ reset: true }); }
+      }, h('i'), h('span', { text: name }), h('span', { class: 'n', text: String(n) }));
+    }
+    function renderFavCount() {
+      $('#favCount').textContent = favs.size ? '(' + favs.size + ')' : '';
+    }
+
+    function setDay(key) {
+      state.day = key;
+      try { location.hash = DAY_BY_KEY[key].slug; } catch (e) { /* hash unavailable */ }
+      render({ reset: true });
+    }
+
+    /* ---------- timeline ---------- */
+    function layoutLanes(items) {
+      var out = [], cluster = [], clusterEnd = -1, laneEnds = [];
+      function flush() {
+        var n = laneEnds.length || 1;
+        cluster.forEach(function (c) { c.lanes = n; out.push(c); });
+        cluster = []; laneEnds = []; clusterEnd = -1;
+      }
+      items.forEach(function (s) {
+        if (cluster.length && s.startMin >= clusterEnd) flush();
+        var lane = laneEnds.findIndex(function (e) { return e <= s.startMin; });
+        if (lane < 0) { lane = laneEnds.length; laneEnds.push(s.endMin); } else { laneEnds[lane] = s.endMin; }
+        cluster.push({ s: s, lane: lane, lanes: 1 });
+        clusterEnd = Math.max(clusterEnd, s.endMin);
+      });
+      if (cluster.length) flush();
+      return out;
+    }
+
+    function timeRange(s) { return tfSD.format(new Date(s.start)) + ' - ' + tfSD.format(new Date(s.end)); }
+    function speakerText(s) { return s.speakers.join(', '); }
+
+    function buildCard(c, startMin) {
+      var s = c.s;
+      var top = PAD + (s.startMin - startMin) / 60 * HOUR_PX;
+      var hgt = Math.max(18, (s.endMin - s.startMin) / 60 * HOUR_PX - 3);
+      var showTime = hgt >= 46;
+      var showSpk = hgt >= 84 && s.speakers.length > 0;
+      var avail = hgt - 8;
+      var lines = Math.max(1, Math.min(6, Math.floor((avail - (showTime ? 15 : 0) - (showSpk ? 15 : 0)) / 16)));
+      var wPct = 100 / c.lanes;
+      var el = h('button', {
+        type: 'button', class: 'card' + (hgt < 30 ? ' xs' : ''), 'data-sid': s.id,
+        title: s.title + '\n' + s.room + ', ' + timeRange(s),
+        style: 'top:' + top + 'px;height:' + hgt + 'px;left:calc(' + (c.lane * wPct) + '% + 3px);width:calc(' + wPct + '% - 6px);--lines:' + lines,
+        onclick: function () { openSession(s.id); }
+      },
+        h('span', { class: 'c-title', text: s.title }),
+        showTime ? h('span', { class: 'c-time', text: timeRange(s) }) : null,
+        showSpk ? h('span', { class: 'c-spk', text: speakerText(s) }) : null,
+        favs.has(s.id) ? starSvg('fav') : null
+      );
+      return el;
+    }
+
+    function buildBoard(list, ez) {
+      var dayInfo = DAY_BY_KEY[state.day];
+      var rangeSrc = SESS.filter(function (s) { return s.day === state.day && (ez === 'alles' || s.zone === ez); });
+      var startMin = Math.floor(Math.min.apply(null, rangeSrc.map(function (s) { return s.startMin; })) / 60) * 60;
+      var endMin = Math.ceil(Math.max.apply(null, rangeSrc.map(function (s) { return s.endMin; })) / 60) * 60;
+      var hours = Math.max(1, (endMin - startMin) / 60);
+      var H = hours * HOUR_PX + PAD * 2;
+      var rooms = ALL_ROOMS.filter(function (r) { return list.some(function (s) { return s.room === r.name; }); });
+      var nw = nowInfo();
+      var showNow = nw.key === state.day && nw.mins >= startMin && nw.mins <= endMin;
+      var nowTop = PAD + (nw.mins - startMin) / 60 * HOUR_PX;
+
+      var board = h('div', { class: 'board', style: '--cols:' + rooms.length + ';--H:' + H + 'px;--hour:' + HOUR_PX + 'px;--pad:' + PAD + 'px' });
+      board.append(h('div', { class: 'corner' },
+        h('b', { text: 'San Diego' }),
+        SAME_TZ ? null : h('span', { text: 'Your time', title: USER_TZ })));
+      rooms.forEach(function (r) {
+        board.append(h('div', { class: 'colhead', style: '--z:var(--z-' + r.zone + ')' },
+          h('b', { text: r.name }),
+          ez === 'alles' ? h('span', { text: ZONE_BY_ID[r.zone].name }) : null));
+      });
+
+      var tc = h('div', { class: 'timecol' });
+      for (var i = 0; i <= hours; i++) {
+        var m = startMin + i * 60;
+        if (m > 1440) break;
+        var ms = laToMs(dayInfo.y, dayInfo.m, dayInfo.d, m);
+        tc.append(h('div', { class: 'tl', style: 'top:' + (PAD + i * HOUR_PX) + 'px' },
+          h('b', { text: p2((m / 60) % 24) + ':00' }),
+          SAME_TZ ? null : h('span', { text: tfUser.format(new Date(ms)) })));
+      }
+      board.append(tc);
+
+      rooms.forEach(function (r) {
+        var body = h('div', { class: 'colbody', style: '--z:var(--z-' + r.zone + ')' });
+        var items = list.filter(function (s) { return s.room === r.name; })
+          .sort(function (a, b) { return a.startMin - b.startMin || b.endMin - a.endMin; });
+        layoutLanes(items).forEach(function (c) { body.append(buildCard(c, startMin)); });
+        if (showNow) body.append(h('div', { class: 'nowline', style: 'top:' + nowTop + 'px' }));
+        board.append(body);
+      });
+      board.dataset.nowTop = showNow ? String(nowTop) : '';
+      return board;
+    }
+
+    /* ---------- agenda ---------- */
+    function buildAgenda(list, ez) {
+      var wrap = h('div', { class: 'agenda' });
+      var sorted = list.slice().sort(function (a, b) {
+        return a.start - b.start || ROOM_ORDER[a.room] - ROOM_ORDER[b.room] || a.title.localeCompare(b.title);
+      });
+      var groups = new Map();
+      sorted.forEach(function (s) {
+        if (!groups.has(s.start)) groups.set(s.start, []);
+        groups.get(s.start).push(s);
+      });
+      groups.forEach(function (arr, start) {
+        var d = new Date(start);
+        var time = h('div', { class: 'slot-time' },
+          h('b', { text: tfSD.format(d) }),
+          SAME_TZ ? null : h('span', { text: tfUser.format(d) }));
+        var ul = h('ul', { class: 'rows' });
+        arr.forEach(function (s) { ul.append(buildRow(s, ez)); });
+        wrap.append(h('section', { class: 'slot' }, time, ul));
+      });
+      return wrap;
+    }
+
+    function buildRow(s, ez) {
+      var live = isLive(s);
+      var meta = [
+        h('span', { class: 'r-room' }, h('i'), s.room),
+        h('span', { text: timeRange(s) }),
+        h('span', { text: durText(s.endMin - s.startMin) })
+      ];
+      if (s.speakers.length) {
+        var shown = s.speakers.slice(0, 4).join(', ') + (s.speakers.length > 4 ? ' and ' + (s.speakers.length - 4) + ' more' : '');
+        meta.push(h('span', { text: shown }));
+      }
+      var main = h('button', { type: 'button', class: 'row-main', 'data-sid': s.id, onclick: function () { openSession(s.id); } },
+        h('span', { class: 'r-title', text: s.title }),
+        h('span', { class: 'r-meta' }, meta));
+      var star = h('button', {
+        type: 'button', class: 'star', 'aria-pressed': String(favs.has(s.id)),
+        'aria-label': (favs.has(s.id) ? 'Remove from my picks: ' : 'Add to my picks: ') + s.title,
+        onclick: function () { toggleFav(s.id); }
+      }, starSvg());
+      return h('li', { class: 'row', style: '--z:var(--z-' + s.zone + ')' }, main, live ? h('span', { class: 'live', text: 'Live now' }) : null, star);
+    }
+
+    /* ---------- panel ---------- */
+    var panel = $('#panel'), scrim = $('#scrim');
+    var openId = null;
+
+    function openSession(id) {
+      var s = BY_ID[id];
+      if (!s) return;
+      openId = id;
+      renderPanel(s);
+      panel.hidden = false; scrim.hidden = false;
+      $('#top').inert = true; $('#stage').inert = true; $('#foot').inert = true;
+      var btn = panel.querySelector('.p-close');
+      if (btn) btn.focus();
+    }
+    function closePanel() {
+      if (panel.hidden) return;
+      var id = openId;
+      panel.hidden = true; scrim.hidden = true; openId = null;
+      $('#top').inert = false; $('#stage').inert = false; $('#foot').inert = false;
+      var back = id ? document.querySelector('[data-sid="' + id + '"]') : null;
+      (back || $('#stage')).focus();
+    }
+
+    function renderPanel(s) {
+      var z = ZONE_BY_ID[s.zone];
+      var dayInfo = DAY_BY_KEY[s.day];
+      var timeBox = h('div', { class: 'p-time' },
+        h('span', { class: 'day-line', text: dayInfo.long }),
+        h('span', null, h('b', { text: timeRange(s) }), ' San Diego, ' + durText(s.endMin - s.startMin)));
+      if (!SAME_TZ) {
+        var delta = userDayDelta(s.start, s.day);
+        var extra = delta ? ' (' + (delta > 0 ? '+' : '') + delta + (Math.abs(delta) === 1 ? ' day' : ' days') + ')' : '';
+        timeBox.append(h('span', { class: 'you', text: tfUser.format(new Date(s.start)) + ' - ' + tfUser.format(new Date(s.end)) + ' your time' + extra }));
+      }
+
+      var tags = h('ul', { class: 'tags' });
+      if (s.appOnly) tags.append(h('li', { class: 'app', text: 'Mobile app only' }));
+      tags.append(h('li', { text: s.program }));
+      s.tags.forEach(function (t) { tags.append(h('li', { text: t })); });
+
+      var pinned = favs.has(s.id);
+      var favBtn = h('button', {
+        type: 'button', class: 'p-fav', 'aria-pressed': String(pinned),
+        onclick: function () { toggleFav(s.id); }
+      }, starSvg(), pinned ? 'In my picks' : 'Add to my picks');
+
+      var conc = SESS.filter(function (o) {
+        return o.id !== s.id && o.day === s.day && o.start < s.end && o.end > s.start &&
+          o.room !== s.room && o.zone !== 'meetgreet' && o.zone !== 'tabletop';
+      }).sort(function (a, b) { return ROOM_ORDER[a.room] - ROOM_ORDER[b.room] || a.start - b.start; });
+
+      var nodes = [
+        h('button', { type: 'button', class: 'p-close', onclick: closePanel, text: 'Close' }),
+        h('div', { class: 'pz', style: '--z:var(--z-' + s.zone + ')' }, h('i'), h('span', { text: z.name + ', ' + s.room })),
+        h('h2', { id: 'panel-title', text: s.title }),
+        timeBox, tags,
+        s.desc ? h('p', { class: 'p-desc', text: s.desc }) : null
+      ];
+      if (s.speakers.length) {
+        nodes.push(h('h3', { class: 'p-h', text: s.speakers.length > 1 ? 'Speakers' : 'Speaker' }));
+        var ul = h('ul', { class: 'spk' });
+        s.speakers.forEach(function (n) {
+          ul.append(h('li', null, h('a', { href: 'https://www.twitch.tv/' + encodeURIComponent(n.toLowerCase()), target: '_blank', rel: 'noopener noreferrer', text: n })));
+        });
+        nodes.push(ul);
+      }
+      nodes.push(h('div', { style: 'margin-top:18px' }, favBtn));
+      if (conc.length) {
+        nodes.push(h('h3', { class: 'p-h', text: 'At the same time' }));
+        var list = h('ul', { class: 'conc' });
+        conc.slice(0, 8).forEach(function (o) {
+          list.append(h('li', null, h('button', { type: 'button', style: '--z:var(--z-' + o.zone + ')', onclick: function () { openSession(o.id); } },
+            h('b', { text: o.title }), h('span', { text: o.room + ', ' + timeRange(o) }))));
+        });
+        nodes.push(list);
+        if (conc.length > 8) nodes.push(h('p', { class: 'conc-more', text: 'And ' + (conc.length - 8) + ' more sessions. Use the timeline for the full picture.' }));
+      }
+      panel.replaceChildren.apply(panel, nodes);
+      panel.scrollTop = 0;
+    }
+
+    function toggleFav(id) {
+      if (favs.has(id)) favs.delete(id); else favs.add(id);
+      saveFavs();
+      render({ keep: true });
+      if (openId === id) renderPanel(BY_ID[id]);
+      var btn = panel.hidden ? null : panel.querySelector('.p-fav');
+      if (btn) btn.focus();
+    }
+
+    /* ---------- main render ---------- */
+    function renderStage(opts) {
+      var stage = $('#stage');
+      var ez = zoneEff();
+      var list = SESS.filter(function (s) { return ok(s, null, ez); });
+      var prevTop = stage.scrollTop, prevLeft = stage.scrollLeft;
+      stage.replaceChildren();
+      if (!list.length) {
+        stage.append(h('div', { class: 'empty' },
+          h('p', { class: 'lead', text: 'No sessions found.' }),
+          h('p', { class: 'sub', text: 'Change your search, pick another day or choose All.' }),
+          h('button', { type: 'button', class: 'btn', text: 'Clear search and filters', onclick: resetFilters })));
+        return;
+      }
+      var content = state.view === 'grid' ? buildBoard(list, ez) : buildAgenda(list, ez);
+      stage.append(content);
+      if (opts && opts.keep) {
+        stage.scrollTop = prevTop; stage.scrollLeft = prevLeft;
+      } else {
+        stage.scrollTop = 0; stage.scrollLeft = 0;
+        if (opts && opts.initial && state.view === 'grid' && content.dataset.nowTop) {
+          stage.scrollTop = Math.max(0, +content.dataset.nowTop - 160);
+        }
+      }
+    }
+
+    function render(opts) {
+      renderDays();
+      renderZones();
+      renderFavCount();
+      renderStage(opts);
+      $('#favToggle').setAttribute('aria-pressed', String(state.fav));
+      document.querySelectorAll('.seg button').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.view === state.view));
+      });
+    }
+
+    function resetFilters() {
+      state.q = ''; $('#q').value = ''; state.fav = false; state.zone = 'alles';
+      render({ reset: true });
+    }
+
+    /* ---------- start ---------- */
+    function dayFromHash() {
+      var k = location.hash.replace(/^#/, '');
+      var d = DAYS.find(function (x) { return x.slug === k; });
+      return d ? d.key : null;
+    }
+    (function pickInitialDay() {
+      var fromHash = dayFromHash();
+      var today = nowInfo().key;
+      if (fromHash) { state.day = fromHash; return; }
+      if (DAY_BY_KEY[today]) { state.day = today; return; }
+      var big = DAYS.find(function (d) { return SESS.filter(function (s) { return s.day === d.key; }).length >= 20; });
+      state.day = (big || DAYS[0]).key;
+    })();
+
+    $('#q').addEventListener('input', function (e) {
+      state.q = norm(e.target.value.trim());
+      render({ reset: true });
+    });
+    $('#favToggle').addEventListener('click', function () { state.fav = !state.fav; render({ reset: true }); });
+    document.querySelectorAll('.seg button').forEach(function (b) {
+      b.addEventListener('click', function () { state.view = b.dataset.view; render({ reset: true }); });
+    });
+    scrim.addEventListener('click', closePanel);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePanel(); });
+    window.addEventListener('hashchange', function () {
+      var k = dayFromHash();
+      if (k && k !== state.day) { state.day = k; render({ reset: true }); }
+    });
+
+    render({ initial: true });
+  }
+})();
+</script>
+</body>
+</html>

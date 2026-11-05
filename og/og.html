@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OG image source</title>
+<!-- Source for public/og.png (1200x630). Render with: npm run og -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=block">
+<style>
+  :root {
+    --blue: #0014a5;
+    --teal: #00c8af;
+    --pink: #fa1ed2;
+    --lime: #d4ff2a;
+    --mint: #e6fbf3;
+    --ink: #0b1340;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative;
+    background: var(--mint);
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    color: var(--ink);
+  }
+
+  /* soft colour fields, our own: two blurred discs and a lime wash */
+  .glow { position: absolute; border-radius: 50%; filter: blur(70px); }
+  .g1 { width: 620px; height: 620px; right: -160px; top: -260px; background: var(--lime); opacity: .75; }
+  .g2 { width: 520px; height: 520px; right: 120px; bottom: -330px; background: var(--teal); opacity: .55; }
+  .g3 { width: 380px; height: 380px; left: -200px; top: -170px; background: var(--pink); opacity: .22; }
+
+  /* left: copy */
+  .copy { position: absolute; left: 72px; top: 64px; width: 600px; }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 12px;
+    font: 700 22px/1 'Barlow Semi Condensed', sans-serif; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--blue);
+  }
+  .kicker i { width: 14px; height: 14px; border-radius: 4px; background: var(--pink); transform: rotate(45deg); }
+  h1 {
+    margin-top: 26px;
+    font: 800 82px/0.94 'Bricolage Grotesque', sans-serif; letter-spacing: -0.035em;
+    color: var(--blue);
+  }
+  h1 em { font-style: normal; background: linear-gradient(100deg, var(--pink) 0%, #9a2cff 55%, var(--blue) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { margin-top: 26px; font: 500 29px/1.25 'Barlow Semi Condensed', sans-serif; color: #2a3470; max-width: 520px; }
+
+  .bottom { position: absolute; left: 72px; bottom: 60px; display: flex; align-items: center; gap: 18px; }
+  .url {
+    padding: 12px 22px 13px; border-radius: 999px; background: var(--blue); color: #fff;
+    font: 700 28px/1 'Barlow Semi Condensed', sans-serif; letter-spacing: .01em;
+  }
+  .url b { color: var(--lime); font-weight: 700; }
+  .note { font: 600 20px/1.2 'Barlow Semi Condensed', sans-serif; color: #4a5488; }
+
+  /* right: a little timeline, the thing the link opens */
+  .tl {
+    position: absolute; left: 708px; top: 70px; width: 470px; height: 640px;
+    border-radius: 26px; background: rgba(255, 255, 255, .82);
+    box-shadow: 0 30px 60px -20px rgba(0, 20, 165, .35), 0 0 0 2px rgba(0, 20, 165, .08);
+    transform: rotate(4deg); transform-origin: 0 0;
+    overflow: hidden;
+  }
+  .tl-head { display: grid; grid-template-columns: 54px repeat(3, 1fr); height: 58px; border-bottom: 2px solid #dfe4f2; }
+  .tl-head span { align-self: center; height: 12px; margin: 0 16px; border-radius: 6px; background: #c4cbe3; }
+  .tl-head span:first-child { visibility: hidden; }
+  .tl-body { position: relative; display: grid; grid-template-columns: 54px repeat(3, 1fr); height: 580px; }
+  .tl-time { position: relative; border-right: 2px solid #e6eaf4; }
+  .tl-time b { position: absolute; right: 10px; font: 700 15px/1 'Barlow Semi Condensed', sans-serif; color: #7b84a8; }
+  .col { position: relative; z-index: 1; border-right: 2px solid #eef1f8; }
+  .col:last-child { border-right: 0; }
+  .hr { position: absolute; left: 54px; right: 0; height: 2px; background: #eef1f8; }
+  .ev {
+    position: absolute; left: 8px; right: 8px; border-radius: 10px; padding: 11px 12px;
+    background: color-mix(in srgb, var(--c) 16%, #fff); border-left: 6px solid var(--c);
+  }
+  .ev::before, .ev::after { content: ''; display: block; height: 10px; border-radius: 5px; background: var(--c); opacity: .85; }
+  .ev::before { width: 82%; }
+  .ev::after { width: 52%; margin-top: 8px; opacity: .4; }
+  .ev.pick { box-shadow: 0 0 0 3px var(--c); }
+  .star { position: absolute; right: 10px; bottom: 9px; width: 22px; height: 22px; fill: var(--pink); }
+  .now { position: absolute; z-index: 2; left: 54px; right: 0; top: 262px; height: 3px; background: var(--pink); }
+  .now::before { content: ''; position: absolute; left: -7px; top: -5px; width: 13px; height: 13px; border-radius: 50%; background: var(--pink); }
+</style>
+</head>
+<body>
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+  <div class="glow g3"></div>
+
+  <div class="copy">
+    <div class="kicker"><i></i>San Diego · 13–15 Nov 2026</div>
+    <h1>TwitchCon,<br>but as a <em>timeline</em>.</h1>
+    <p class="sub">Every stage and room side by side, live schedule data, and a star for the panels you can't miss.</p>
+  </div>
+
+  <div class="bottom">
+    <div class="url">tc.jasper.stream</div>
+    <div class="note">Unofficial fan project</div>
+  </div>
+
+  <div class="tl">
+    <div class="tl-head"><span></span><span></span><span style="margin-right:40px"></span><span style="margin-right:28px"></span></div>
+    <div class="tl-body">
+      <div class="tl-time"><b style="top:14px">10:00</b><b style="top:110px">11:00</b><b style="top:206px">12:00</b><b style="top:302px">13:00</b><b style="top:398px">14:00</b><b style="top:494px">15:00</b></div>
+      <div class="col">
+        <div class="ev" style="--c:var(--teal); top:20px; height:78px"></div>
+        <div class="ev pick" style="--c:var(--pink); top:122px; height:132px"><svg class="star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.8l6-.8z"/></svg></div>
+        <div class="ev" style="--c:var(--blue); top:310px; height:96px"></div>
+        <div class="ev" style="--c:var(--teal); top:430px; height:120px"></div>
+      </div>
+      <div class="col">
+        <div class="ev" style="--c:var(--blue); top:62px; height:140px"></div>
+        <div class="ev" style="--c:#7ab800; top:226px; height:70px"></div>
+        <div class="ev pick" style="--c:var(--teal); top:318px; height:150px"><svg class="star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.8l6-.8z"/></svg></div>
+      </div>
+      <div class="col">
+        <div class="ev" style="--c:var(--pink); top:20px; height:110px"></div>
+        <div class="ev" style="--c:var(--teal); top:156px; height:84px"></div>
+        <div class="ev" style="--c:var(--blue); top:264px; height:60px"></div>
+        <div class="ev" style="--c:var(--pink); top:350px; height:126px"></div>
+      </div>
+      <div class="hr" style="top:110px"></div><div class="hr" style="top:206px"></div><div class="hr" style="top:302px"></div><div class="hr" style="top:398px"></div><div class="hr" style="top:494px"></div>
+      <div class="now"></div>
+    </div>
+  </div>
+</body>
+</html>
