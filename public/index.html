@@ -123,6 +123,15 @@ button { font: inherit; color: inherit; }
 h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
 .meta { margin: 5px 0 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
 .meta-update { padding: 0; border: 0; background: none; color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.over {
+  display: flex; align-items: center; gap: 12px; margin: 0 0 12px; padding: 9px 8px 9px 14px; border-radius: 10px;
+  border: 1px solid color-mix(in srgb, #fa1ed2 40%, var(--surface)); background: color-mix(in srgb, #fa1ed2 10%, var(--surface));
+  font-size: 15px; line-height: 1.35;
+}
+.over p { flex: 1; margin: 0; }
+.over b { font-family: var(--f-display); font-weight: 700; }
+.over button { flex: none; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; }
+.over button:hover { background: color-mix(in srgb, #fa1ed2 14%, var(--surface)); color: var(--ink); }
 .tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .search input {
   width: 250px; max-width: 100%; height: 38px; padding: 0 12px;
@@ -397,11 +406,45 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
     return days + (days === 1 ? ' day ago' : ' days ago');
   }
   var metaShown = null; // { d, mode } currently in the header, re-rendered every minute so "x minutes ago" stays true
+  // the event counts as over 2 hours after its last session ends
+  function eventOver(d) {
+    var end = 0;
+    d.sessions.forEach(function (s) { if (s.e > end) end = s.e; });
+    return end > 0 && Date.now() > end + 2 * 3600000;
+  }
+  var OVER_KEY = 'tcsd26-over-dismissed', overDismissed = false;
+  function showOverBanner(d) {
+    if (overDismissed || !eventOver(d) || document.getElementById('over')) return;
+    try { if (localStorage.getItem(OVER_KEY)) return; } catch (e) { /* storage unavailable */ }
+    var box = document.createElement('div');
+    box.className = 'over';
+    box.id = 'over';
+    box.setAttribute('role', 'status');
+    var p = document.createElement('p');
+    var b = document.createElement('b');
+    b.textContent = "That's a wrap! ";
+    p.append(b, 'TwitchCon San Diego 2026 is over. Thanks for using this schedule, it stays up for anyone looking back. ❤️');
+    var x = document.createElement('button');
+    x.type = 'button';
+    x.setAttribute('aria-label', 'Dismiss');
+    x.textContent = '×';
+    x.addEventListener('click', function () {
+      box.remove();
+      overDismissed = true;
+      try { localStorage.setItem(OVER_KEY, '1'); } catch (e) { /* storage unavailable */ }
+    });
+    box.append(p, x);
+    var top = document.getElementById('top');
+    top.insertBefore(box, top.firstChild);
+  }
+
   function setMeta(d, mode) {
     metaShown = { d: d, mode: mode };
+    showOverBanner(d);
     var n = d.sessions.length + ' sessions.';
     var when = ago(d.fetchedAt);
-    var text = mode === 'saved' ? 'Showing the copy saved on this device, updated ' + when + '. ' + n
+    var text = eventOver(d) ? 'Final schedule from twitchcon.com, last updated ' + when + '. ' + n
+      : mode === 'saved' ? 'Showing the copy saved on this device, updated ' + when + '. ' + n
       : d.stale ? 'TwitchCon is not responding, showing the copy from ' + when + '. ' + n
       : 'Live from twitchcon.com, updated ' + when + '. ' + n;
     metaEl.replaceChildren(text);
