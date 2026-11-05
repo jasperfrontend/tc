@@ -34,7 +34,7 @@ It even took a solid ten seconds to render as an image. So I vibecoded this inst
 - **Timeline view**: every stage and room is a column, every session is a block on a time grid, so you see what's on *at the same time* at a glance. A red line shows "now" during the con.
 - **Agenda view**: a time-ordered list grouped by start time, for phones and quick scanning.
 - **Areas**: filter by Stages, Theaters and LAN, Creator Camp, Workshops, Community, Tabletop, Meet & Greet.
-- **Search**: title, speaker or room.
+- **Search**: title, streamer or room.
 - **My picks**: star sessions, they're saved in your browser. No account, no login.
 - **Shareable sessions**: every session has its own link (`tc.jasper.stream/s/<id>`) with its own Discord/Slack/X preview: title, time, room, speakers and a preview image.
 - **Your time zone**: times are shown in San Diego time, plus your local time if you're not in it.

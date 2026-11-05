@@ -337,7 +337,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       <p class="meta" id="meta"></p>
     </div>
     <div class="tools">
-      <label class="search"><span class="sr">Search the schedule</span><input id="q" type="search" placeholder="Search title, speaker or room" autocomplete="off"></label>
+      <label class="search"><span class="sr">Search the schedule</span><input id="q" type="search" placeholder="Search title, streamer or room" autocomplete="off"></label>
       <div class="seg" role="group" aria-label="View">
         <button type="button" data-view="grid" aria-pressed="true">Timeline</button>
         <button type="button" data-view="list" aria-pressed="false">Agenda</button>
@@ -961,7 +961,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
         s.desc ? h('p', { class: 'p-desc', text: s.desc }) : null
       ];
       if (s.speakers.length) {
-        nodes.push(h('h3', { class: 'p-h', text: s.speakers.length > 1 ? 'Speakers' : 'Speaker' }));
+        nodes.push(h('h3', { class: 'p-h', text: s.speakers.length > 1 ? 'Streamers' : 'Streamer' }));
         var ul = h('ul', { class: 'spk' });
         s.speakers.forEach(function (n) {
           ul.append(h('li', null, h('a', { href: 'https://www.twitch.tv/' + encodeURIComponent(n.toLowerCase()), target: '_blank', rel: 'noopener noreferrer', text: n })));
