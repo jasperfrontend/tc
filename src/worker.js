@@ -3,7 +3,7 @@
  *
  * The site itself is the Pages project (public/ + functions/) on tc.jasper.stream.
  * This Worker has no public URL; it only runs the cron that copies the TwitchCon
- * sessions API into KV every 5 minutes, so visitors never wait on TwitchCon.
+ * sessions API into KV once an hour, so visitors never wait on TwitchCon.
  */
 
 import { refresh, REFRESH_UNTIL } from './sessions.js';

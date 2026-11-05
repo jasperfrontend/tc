@@ -2,9 +2,9 @@
 
 const UPSTREAM = 'https://api.twitchcon.com/sessions?eventName=san-diego-2026';
 const KV_KEY = 'sessions';
-const STALE_AFTER_MS = 20 * 60 * 1000;     // no successful refresh for this long = flag as stale
+const STALE_AFTER_MS = 3 * 60 * 60 * 1000;  // hourly cron missed a few runs = flag as stale and retry on request
 const MEMO_MS = 60 * 1000;                 // per-isolate memory cache, saves KV reads
-const RETRY_MS = 60 * 1000;                // min gap between on-request refresh attempts per isolate
+const RETRY_MS = 15 * 60 * 1000;           // min gap between on-request refresh attempts per isolate
 export const REFRESH_UNTIL = Date.UTC(2026, 10, 18); // stop polling TwitchCon a few days after the event
 
 let memo = null;        // { body, fetchedAt, at }
@@ -39,7 +39,7 @@ export async function serveSessions(env, ctx) {
     }
     if (now < REFRESH_UNTIL) body = body.replace('"stale":false', '"stale":true');
   }
-  return json(body, 200, 'public, max-age=60');
+  return json(body, 200, 'public, max-age=300');
 }
 
 /** Fetch TwitchCon, trim, store in KV. Returns { body, fetchedAt } or null on failure. */
@@ -47,7 +47,7 @@ export async function refresh(env) {
   let raw;
   try {
     const res = await fetch(UPSTREAM, {
-      headers: { Accept: 'application/json', 'User-Agent': 'tcsd26-schedule-viewer' },
+      headers: { Accept: 'application/json', 'User-Agent': 'tc.jasper.stream schedule viewer (+https://github.com/jasperfrontend/tc)' },
       signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);

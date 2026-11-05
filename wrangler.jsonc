@@ -4,13 +4,13 @@
   "main": "src/worker.js",
   "compatibility_date": "2026-11-01",
   // Two deploys share this repo (npm run deploy does both):
-  //  - this Worker: only the 5-minute cron that refreshes KV, no public URL
+  //  - this Worker: only the hourly cron that refreshes KV, no public URL
   //  - Pages project "tcsd26-schedule": public/ + functions/, serves tc.jasper.stream (KV bound in the dashboard)
   "workers_dev": false,
   "preview_urls": false,
   // cached copy of the TwitchCon schedule (namespace "tcsd26-schedule-schedule")
   "kv_namespaces": [{ "binding": "SCHEDULE", "id": "a240ffffc975408d90ab01dea9f3a245" }],
-  // refresh from TwitchCon every 5 minutes (stops by itself after the event, see src/sessions.js)
-  "triggers": { "crons": ["*/5 * * * *"] },
+  // refresh from TwitchCon once an hour, at :07 (stops by itself after the event, see src/sessions.js)
+  "triggers": { "crons": ["7 * * * *"] },
   "observability": { "enabled": true }
 }

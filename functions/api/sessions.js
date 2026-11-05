@@ -1,5 +1,5 @@
 // Pages Function for the Cloudflare Pages copy of the site (tc.jasper.stream).
-// It reads the same KV store that the Worker's 5-minute cron keeps fresh.
+// It reads the same KV store that the Worker's hourly cron keeps fresh.
 import { serveSessions } from '../../src/sessions.js';
 
 export function onRequest({ request, env, waitUntil }) {

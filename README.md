@@ -37,18 +37,18 @@ It even took a solid ten seconds to render as an image. So I vibecoded this inst
 - **Search**: title, speaker or room.
 - **My picks**: star sessions, they're saved in your browser. No account, no login.
 - **Your time zone**: times are shown in San Diego time, plus your local time if you're not in it.
-- **Live data**: pulled from TwitchCon's own schedule API and refreshed every 5 minutes. If they move a panel, this moves with it.
+- **Live data**: pulled from TwitchCon's own schedule API and refreshed every hour. If they move a panel, this moves with it.
 - **Con-wifi proof**: the last good schedule is kept on your device, so it still works when the convention center network gives up.
 
 ## How it works
 
 ```
-api.twitchcon.com ──(every 5 min)──> Cloudflare Worker (cron) ──> Workers KV
+api.twitchcon.com ───(hourly)────> Cloudflare Worker (cron) ──> Workers KV
                                                                      │
 browser ──> tc.jasper.stream (Cloudflare Pages) ──> /api/sessions ───┘
 ```
 
-TwitchCon's API doesn't send CORS headers, so the page can't call it directly. A small Cloudflare Worker fetches it on a 5-minute cron, trims it to the fields the page needs (about 225 KB instead of 512 KB), drops a few sessions TwitchCon lists twice, and stores it in Workers KV. The page is served by Cloudflare Pages, and its `/api/sessions` function reads from that same KV store, so visitors never wait on TwitchCon. If TwitchCon goes down, the last good copy keeps being served. All of it fits in Cloudflare's free tier.
+TwitchCon's API doesn't send CORS headers, so the page can't call it directly. A small Cloudflare Worker fetches it once an hour, trims it to the fields the page needs (about 225 KB instead of 512 KB), drops a few sessions TwitchCon lists twice, and stores it in Workers KV. The page is served by Cloudflare Pages, and its `/api/sessions` function reads from that same KV store, so visitors never wait on TwitchCon. If TwitchCon goes down, the last good copy keeps being served. All of it fits in Cloudflare's free tier.
 
 | Path | What |
 |---|---|
