@@ -287,7 +287,8 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
 .p-fav[aria-pressed="true"] { border-color: var(--star); background: color-mix(in srgb, var(--star) 16%, var(--surface)); font-weight: 600; }
 .p-fav[aria-pressed="true"] svg { fill: var(--star); stroke: var(--star); }
 .p-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-.p-share span { min-width: 6.5em; text-align: left; }
+.p-actions .p-fav { justify-content: center; }
+.p-share { min-width: 9.5em; } /* room for "Link copied" without the button changing size */
 .conc { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .conc button {
   width: 100%; display: grid; gap: 1px; padding: 7px 10px; text-align: left; cursor: pointer;
