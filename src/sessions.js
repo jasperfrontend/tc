@@ -75,10 +75,11 @@ export async function refresh(env) {
     console.error('TwitchCon returned no usable sessions, keeping the old copy');
     return null;
   }
+  const avatars = collectAvatars(raw);
 
   const fetchedAt = Date.now();
-  const version = await shortHash(JSON.stringify(sessions));
-  const body = JSON.stringify({ fetchedAt, version, stale: false, sessions });
+  const version = await shortHash(JSON.stringify([sessions, avatars]));
+  const body = JSON.stringify({ fetchedAt, version, stale: false, sessions, avatars });
   await env.SCHEDULE.put(KV_KEY, body, { metadata: { fetchedAt, version } });
   return { body, fetchedAt };
 }
@@ -120,6 +121,26 @@ function trimSessions(json) {
     out.push(item);
   }
   return out.length ? out : null;
+}
+
+/**
+ * Streamer name -> avatar URL, once per streamer (not per session). TwitchCon's data
+ * links the 300x300 image on Twitch's CDN; the page shows them at ~24px, so ask the
+ * CDN for its 70x70 variant (about 10 KB instead of 135 KB). Only Twitch CDN URLs
+ * are accepted.
+ */
+function collectAvatars(json) {
+  const out = {};
+  for (const row of json.sessions) {
+    for (const sp of (Array.isArray(row?.data?.speakers) ? row.data.speakers : [])) {
+      const name = String(sp?.name ?? '').trim();
+      const img = String(sp?.image ?? '');
+      if (!name || out[name]) continue;
+      const m = img.match(/^https:\/\/static-cdn\.jtvnw\.net\/([\w./-]+?)-\d+x\d+\.(png|jpe?g)$/i);
+      if (m) out[name] = `https://static-cdn.jtvnw.net/${m[1]}-70x70.${m[2]}`;
+    }
+  }
+  return out;
 }
 
 async function shortHash(text) {

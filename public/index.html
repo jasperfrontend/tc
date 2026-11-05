@@ -289,7 +289,9 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
 .p-desc { margin: 0 0 16px; white-space: pre-line; max-width: 62ch; line-height: 1.5; }
 .p-h { margin: 18px 0 8px; font: 600 16px/1.2 var(--f-display); }
 .spk { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.spk a { display: inline-block; padding: 3px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); text-decoration: none; font-size: 14.5px; }
+.spk a { display: inline-flex; align-items: center; gap: 7px; padding: 3px 11px 3px 3px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); text-decoration: none; font-size: 14.5px; }
+.spk .av { flex: none; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background: var(--line-soft); }
+.spk .av-none { display: inline-grid; place-items: center; font: 700 12px/1 var(--f-display); color: var(--muted); }
 .spk a:hover { border-color: var(--ink); }
 .p-fav { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; }
 .p-fav svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
@@ -922,6 +924,18 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       (back || $('#stage')).focus();
     }
 
+    // streamer avatars (70x70 from Twitch's CDN, listed once per streamer in DATA.avatars);
+    // a letter in a circle when there's none, or when the image fails to load
+    var AVATARS = DATA.avatars || {};
+    function avatarEl(name) {
+      var letter = h('span', { class: 'av av-none', 'aria-hidden': 'true', text: name.charAt(0).toUpperCase() });
+      var url = AVATARS[name];
+      if (!url) return letter;
+      var img = h('img', { class: 'av', src: url, alt: '', width: '24', height: '24', loading: 'lazy', decoding: 'async', referrerpolicy: 'no-referrer' });
+      img.addEventListener('error', function () { img.replaceWith(letter); });
+      return img;
+    }
+
     function renderPanel(s) {
       var z = ZONE_BY_ID[s.zone];
       var dayInfo = DAY_BY_KEY[s.day];
@@ -964,7 +978,8 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
         nodes.push(h('h3', { class: 'p-h', text: s.speakers.length > 1 ? 'Streamers' : 'Streamer' }));
         var ul = h('ul', { class: 'spk' });
         s.speakers.forEach(function (n) {
-          ul.append(h('li', null, h('a', { href: 'https://www.twitch.tv/' + encodeURIComponent(n.toLowerCase()), target: '_blank', rel: 'noopener noreferrer', text: n })));
+          ul.append(h('li', null, h('a', { href: 'https://www.twitch.tv/' + encodeURIComponent(n.toLowerCase()), target: '_blank', rel: 'noopener noreferrer' },
+            avatarEl(n), h('span', { text: n }))));
         });
         nodes.push(ul);
       }
