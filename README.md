@@ -37,6 +37,7 @@ It even took a solid ten seconds to render as an image. So I vibecoded this inst
 - **Search**: title, streamer or room.
 - **My picks**: star sessions, they're saved in your browser. No account, no login.
 - **Shareable sessions**: every session has its own link (`tc.jasper.stream/s/<id>`) with its own Discord/Slack/X preview: title, time, room, speakers and a preview image.
+- **Add to calendar**: each session downloads as an .ics file (`/s/<id>.ics`) for Google, Apple or Outlook calendar, with a link back to the session.
 - **Your time zone**: times are shown in San Diego time, plus your local time if you're not in it.
 - **Live data**: pulled from TwitchCon's own schedule API and refreshed every hour. If they move a panel, this moves with it.
 - **Con-wifi proof**: the last good schedule is kept on your device, so it still works when the convention center network gives up.
@@ -55,10 +56,11 @@ TwitchCon's API doesn't send CORS headers, so the page can't call it directly. A
 |---|---|
 | `public/index.html` | The whole app: one HTML file, no framework, no build step |
 | `src/sessions.js` | Fetch, trim, cache and serve logic, shared by the Worker and Pages |
+| `src/calendar.js` | Builds the .ics file for one session |
 | `src/worker.js` | The cron Worker (no public URL) |
 | `public/model.js` | Rooms, areas, title clean-up and preview text, shared by the page, the Functions and the image renderer |
 | `functions/api/sessions.js` | Pages Function that serves `/api/sessions` |
-| `functions/s/[id].js` | Pages Function for `/s/<id>`: the page with that session's link-preview tags |
+| `functions/s/[id].js` | Pages Function for `/s/<id>`: the page with that session's link-preview tags, and `/s/<id>.ics` |
 | `og/` | Sources and scripts for the preview images and favicons |
 
 ## Running it yourself

@@ -2,8 +2,10 @@
 // for that one session. The page itself reads the id from the URL and opens it.
 // Preview images are pre-rendered by og/sessions.mjs into public/og/s/; a session
 // without one (added after the last deploy) falls back to the site-wide og.png.
+// /s/<session id>.ics is that session as a calendar file (see src/calendar.js).
 import '../../public/model.js';
 import { getSession } from '../../src/sessions.js';
+import { sessionIcs, icsFileName } from '../../src/calendar.js';
 
 const SITE = 'TwitchCon San Diego 2026 schedule';
 
@@ -12,12 +14,15 @@ export async function onRequest({ request, env, params }) {
     return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
   }
   const url = new URL(request.url);
+  const id = String(params.id || '');
+  if (id.endsWith('.ics')) return calendarFile(env, url, id.slice(0, -4));
+
   const page = await env.ASSETS.fetch(new URL('/', url));
   if (!page.ok) return page;
 
   let s = null;
   try {
-    s = await getSession(env, String(params.id || ''));
+    s = await getSession(env, id);
   } catch (err) {
     console.error('session lookup failed:', String(err));
   }
@@ -59,4 +64,26 @@ export async function onRequest({ request, env, params }) {
   res.headers.delete('etag');
   res.headers.set('cache-control', 'public, max-age=300');
   return res;
+}
+
+// /s/<session id>.ics: that one session as a calendar event ("Add to calendar" in the panel)
+async function calendarFile(env, url, id) {
+  let s = null;
+  try {
+    s = await getSession(env, id);
+  } catch (err) {
+    console.error('session lookup failed:', String(err));
+    return new Response('Could not load the schedule. Try again in a minute.', { status: 502, headers: { 'cache-control': 'no-store' } });
+  }
+  if (!s) return new Response('No session with that id.', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+
+  const link = url.origin + '/s/' + encodeURIComponent(s.id);
+  return new Response(sessionIcs(s, link), {
+    headers: {
+      'content-type': 'text/calendar; charset=utf-8',
+      'content-disposition': 'attachment; filename="' + icsFileName(s) + '"',
+      'cache-control': 'public, max-age=300',
+      'x-content-type-options': 'nosniff',
+    },
+  });
 }

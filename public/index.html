@@ -298,8 +298,9 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
 .p-fav[aria-pressed="true"] { border-color: var(--star); background: color-mix(in srgb, var(--star) 16%, var(--surface)); font-weight: 600; }
 .p-fav[aria-pressed="true"] svg { fill: var(--star); stroke: var(--star); }
 .p-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-.p-actions .p-fav { justify-content: center; }
-.p-share { min-width: 9.5em; } /* room for "Link copied" without the button changing size */
+.p-actions .p-fav { flex: 1 1 auto; justify-content: center; } /* phones: the calendar button wraps to a full-width row */
+.p-cal { color: var(--ink); text-decoration: none; }
+.p-share { min-width: 8em; } /* room for "Link copied" without the button changing size */
 .conc { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .conc button {
   width: 100%; display: grid; gap: 1px; padding: 7px 10px; text-align: left; cursor: pointer;
@@ -650,6 +651,19 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       });
       return svg;
     }
+    function calSvg() {
+      var ns = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('aria-hidden', 'true');
+      ['M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z', 'M3 10h18', 'M8 3v4', 'M16 3v4', 'M12 13v5', 'M9.5 15.5h5'].forEach(function (d) {
+        var path = document.createElementNS(ns, 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(path);
+      });
+      return svg;
+    }
     function starSvg(cls) {
       var ns = 'http://www.w3.org/2000/svg';
       var svg = document.createElementNS(ns, 'svg');
@@ -961,6 +975,9 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       var shareBtn = h('button', { type: 'button', class: 'p-fav p-share', title: sessionLink(s.id) });
       shareBtn.addEventListener('click', function () { shareSession(s, shareBtn); });
       shareBtn.append(linkSvg(), h('span', { text: 'Copy link' }));
+      // served by functions/s/[id].js as text/calendar, so phones offer to add it to the calendar app
+      var calBtn = h('a', { class: 'p-fav p-cal', href: '/s/' + encodeURIComponent(s.id) + '.ics', 'aria-label': 'Add to calendar (.ics file)', title: 'Add to your calendar: an .ics file for Google, Apple or Outlook' },
+        calSvg(), h('span', { text: 'Calendar' }));
 
       var conc = SESS.filter(function (o) {
         return o.id !== s.id && o.day === s.day && o.start < s.end && o.end > s.start &&
@@ -983,7 +1000,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
         });
         nodes.push(ul);
       }
-      nodes.push(h('div', { class: 'p-actions' }, favBtn, shareBtn));
+      nodes.push(h('div', { class: 'p-actions' }, favBtn, shareBtn, calBtn));
       if (conc.length) {
         nodes.push(h('h3', { class: 'p-h', text: 'At the same time' }));
         var list = h('ul', { class: 'conc' });
