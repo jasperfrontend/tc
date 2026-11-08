@@ -1025,9 +1025,12 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       if (favs.has(id)) favs.delete(id); else favs.add(id);
       saveFavs();
       render({ keep: true });
-      if (openId === id) renderPanel(BY_ID[id]);
+      // renderPanel scrolls to the top (right for a newly opened session), so
+      // keep the reader where they were when only the star changed
+      var top = panel.scrollTop;
+      if (openId === id) { renderPanel(BY_ID[id]); panel.scrollTop = top; }
       var btn = panel.hidden ? null : panel.querySelector('.p-fav');
-      if (btn) btn.focus();
+      if (btn) btn.focus({ preventScroll: true });
     }
 
     /* ---------- main render ---------- */
