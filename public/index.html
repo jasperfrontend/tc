@@ -173,6 +173,20 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
 .zchip[aria-pressed="true"] { border-color: var(--z); background: color-mix(in srgb, var(--z) var(--tint), var(--surface)); font-weight: 600; }
 .zchip[data-z="alles"] { --z: var(--ink); }
 .zchip[data-z="alles"] i { display: none; }
+/* "My picks" is on: say so in yellow, so the star button, the day counts and an empty day read as one thing */
+.day .pk { display: inline-flex; align-items: center; gap: 4px; }
+.day .pk svg, .picksbar svg, .btn.pick svg { width: 13px; height: 13px; fill: var(--star); stroke: var(--star); stroke-width: 1.5; stroke-linejoin: round; flex: none; }
+/* a strip just above the footer: the header is full, and it stays in view at any scroll */
+.picksbar {
+  flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 6px 10px 6px 16px;
+  border-top: 1px solid var(--star); background: color-mix(in srgb, var(--star) 12%, var(--surface)); font-size: 15px;
+}
+.picksbar[hidden] { display: none; }
+.picksbar p { flex: 1; display: flex; align-items: center; gap: 8px; margin: 0; }
+.picksbar button { height: 30px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+.picksbar button:hover { border-color: var(--star); }
+.btn.pick { display: inline-flex; align-items: center; gap: 7px; background: color-mix(in srgb, var(--star) 16%, var(--surface)); border-color: var(--star); color: var(--ink); }
+.empty .btn + .btn { margin-left: 8px; }
 
 /* stage */
 .stage { flex: 1; min-height: 0; overflow: auto; position: relative; overscroll-behavior: contain; background: var(--bg); }
@@ -355,6 +369,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
   <nav class="zones" id="zones" aria-label="Area"></nav>
 </header>
 <main class="stage" id="stage" tabindex="-1"></main>
+<div class="picksbar" id="picksbar" hidden></div>
 <footer class="foot" id="foot">
   <p>From <a href="https://www.twitch.tv/JasperDiscovers" target="_blank" rel="noopener">JasperDiscovers</a>, the guy who also made <a href="https://overlabels.com" target="_blank" rel="noopener">Overlabels</a> <span class="dot" aria-hidden="true">·</span> <a class="gh" href="https://github.com/jasperfrontend/tc" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.01 8.01 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A8 8 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>Source</a></p>
   <p class="disc">Unofficial fan project, not affiliated with Twitch, TwitchCon or Amazon.</p>
@@ -701,10 +716,13 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       var nav = $('#days');
       nav.replaceChildren.apply(nav, DAYS.map(function (d) {
         var n = SESS.filter(function (s) { return s.day === d.key && ok(s, 'day'); }).length;
+        var count = state.fav
+          ? h('span', { class: 'pk' }, d.short + ', ', starSvg(), n + (n === 1 ? ' pick' : ' picks'))
+          : h('span', { text: d.short + ', ' + n + (n === 1 ? ' session' : ' sessions') });
         return h('button', {
           type: 'button', class: 'day', 'aria-pressed': String(d.key === state.day),
           onclick: function () { setDay(d.key); }
-        }, h('b', { text: d.name }), h('span', { text: d.short + ', ' + n + (n === 1 ? ' session' : ' sessions') }));
+        }, h('b', { text: d.name }), count);
       }));
     }
     function renderZones() {
@@ -930,7 +948,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       setSessionUrl(id, true);
       renderPanel(s);
       panel.hidden = false; scrim.hidden = false;
-      $('#top').inert = true; $('#stage').inert = true; $('#foot').inert = true;
+      $('#top').inert = true; $('#stage').inert = true; $('#picksbar').inert = true; $('#foot').inert = true;
       var btn = panel.querySelector('.p-close');
       if (btn) btn.focus();
     }
@@ -939,7 +957,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       var id = openId;
       panel.hidden = true; scrim.hidden = true; openId = null;
       setSessionUrl(null, true);
-      $('#top').inert = false; $('#stage').inert = false; $('#foot').inert = false;
+      $('#top').inert = false; $('#stage').inert = false; $('#picksbar').inert = false; $('#foot').inert = false;
       var back = id ? document.querySelector('[data-sid="' + id + '"]') : null;
       (back || $('#stage')).focus();
     }
@@ -1041,7 +1059,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       var prevTop = stage.scrollTop, prevLeft = stage.scrollLeft;
       stage.replaceChildren();
       if (!list.length) {
-        stage.append(h('div', { class: 'empty' },
+        stage.append(state.fav ? buildPicksEmpty(ez) : h('div', { class: 'empty' },
           h('p', { class: 'lead', text: 'No sessions found.' }),
           h('p', { class: 'sub', text: 'Change your search, pick another day or choose All.' }),
           h('button', { type: 'button', class: 'btn', text: 'Clear search and filters', onclick: resetFilters })));
@@ -1059,9 +1077,40 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       }
     }
 
+    // Empty because "My picks" is on: name that as the reason, in the same yellow
+    // as the button, and offer to turn it off rather than a generic reset.
+    function buildPicksEmpty(ez) {
+      var day = DAY_BY_KEY[state.day].name;
+      var lead;
+      if (!favs.size) lead = 'You have no picks yet';
+      else if (state.q) lead = 'None of your picks match that search';
+      else if (ez !== 'alles' && SESS.some(function (s) { return s.day === state.day && favs.has(s.id); })) lead = 'None of your ' + day + ' picks are in ' + ZONE_BY_ID[ez].name;
+      else lead = 'None of your picks are on ' + day;
+      var nodes = [
+        h('p', { class: 'lead', text: lead + '.' }),
+        h('p', { class: 'sub', text: favs.size
+          ? 'My picks is on, so you only see sessions you starred.'
+          : 'Star a session to add it to My picks. Turn it off to see the whole schedule.' }),
+        h('button', { type: 'button', class: 'btn pick', onclick: picksOff }, starSvg(), 'Turn off My picks')
+      ];
+      if (state.q) nodes.push(h('button', { type: 'button', class: 'btn ghost', text: 'Clear search and filters', onclick: resetFilters }));
+      return h('div', { class: 'empty' }, nodes);
+    }
+    function picksOff() { state.fav = false; render({ reset: true }); }
+
+    function renderPicksBar() {
+      var bar = $('#picksbar');
+      bar.hidden = !state.fav;
+      if (!state.fav) { bar.replaceChildren(); return; }
+      bar.replaceChildren(
+        h('p', null, starSvg(), 'Only showing your picks (' + favs.size + ').'),
+        h('button', { type: 'button', text: 'Show all sessions', onclick: picksOff }));
+    }
+
     function render(opts) {
       renderDays();
       renderZones();
+      renderPicksBar();
       renderFavCount();
       renderStage(opts);
       $('#favToggle').setAttribute('aria-pressed', String(state.fav));
