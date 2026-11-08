@@ -886,12 +886,18 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
         return m ? decodeURIComponent(m[1]) : new URLSearchParams(location.search).get('s');
       } catch (e) { return null; }
     }
-    function setSessionUrl(id) {
+    // push = add a history entry (so Back returns to the previous view);
+    // without it the current entry is rewritten. Nothing happens if the URL
+    // is already right, so popstate and the initial deep link don't push.
+    function setSessionUrl(id, push) {
       try {
         var u = new URL(location.href);
         u.searchParams.delete('s');
         u.pathname = id ? '/s/' + encodeURIComponent(id) : '/';
-        history.replaceState(history.state, '', u.pathname + u.search + u.hash);
+        var next = u.pathname + u.search + u.hash;
+        if (next === location.pathname + location.search + location.hash) return;
+        if (push) history.pushState(null, '', next);
+        else history.replaceState(history.state, '', next);
       } catch (e) { /* history unavailable */ }
     }
     function sessionLink(id) { return location.origin + '/s/' + encodeURIComponent(id); }
@@ -921,7 +927,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       var s = BY_ID[id];
       if (!s) return;
       openId = id;
-      setSessionUrl(id);
+      setSessionUrl(id, true);
       renderPanel(s);
       panel.hidden = false; scrim.hidden = false;
       $('#top').inert = true; $('#stage').inert = true; $('#foot').inert = true;
@@ -932,7 +938,7 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       if (panel.hidden) return;
       var id = openId;
       panel.hidden = true; scrim.hidden = true; openId = null;
-      setSessionUrl(null);
+      setSessionUrl(null, true);
       $('#top').inert = false; $('#stage').inert = false; $('#foot').inert = false;
       var back = id ? document.querySelector('[data-sid="' + id + '"]') : null;
       (back || $('#stage')).focus();
@@ -1098,12 +1104,25 @@ h1 { margin: 0; font: 700 28px/1.05 var(--f-display); letter-spacing: -0.01em; }
       var k = dayFromHash();
       if (k && k !== state.day) { state.day = k; render({ reset: true }); }
     });
+    // Back/Forward between / and /s/<id>: follow the URL. The URL already
+    // matches, so openSession/closePanel won't push another entry.
+    window.addEventListener('popstate', function () {
+      var id = sessionFromUrl();
+      if (id && BY_ID[id]) {
+        if (id === openId) return;
+        if (BY_ID[id].day !== state.day) { state.day = BY_ID[id].day; render({ reset: true }); }
+        openSession(id);
+      } else {
+        closePanel();
+      }
+    });
 
     render({ initial: true });
     if (linkedId) {
       try { location.replace('#' + DAY_BY_KEY[state.day].slug); } catch (e) { /* hash unavailable */ }
       var card = document.querySelector('[data-sid="' + linkedId + '"]');
       if (card) card.scrollIntoView({ block: 'center', inline: 'center' });
+      setSessionUrl(linkedId); // rewrite an old ?s= link in place rather than pushing on top of it
       openSession(linkedId);
     }
   }
